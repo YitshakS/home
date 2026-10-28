@@ -15,13 +15,18 @@ export class WalkMode extends Plugin {
     this.controls = new PointerLockControls(app.camera, el);
     this.keys = new Set();
     this.active = false;
+    // capture phase: the side panel stops key events from its focused button reaching the page
     addEventListener('keydown', (e) => {
       if (!this.active) return;
       if (e.code === 'Escape') { this.exit(); return; }
+      if (!MOVE_KEYS.has(e.code)) return;
+      e.preventDefault();
+      const fresh = !this.keys.has(e.code);
       this.keys.add(e.code);
-      if (e.code.startsWith('Arrow')) e.preventDefault();
-    });
-    addEventListener('keyup', (e) => this.keys.delete(e.code));
+      // a short tap is released before the next frame: take one step right away
+      if (fresh) this.step(0.08);
+    }, true);
+    addEventListener('keyup', (e) => this.keys.delete(e.code), true);
     // Esc inside pointer lock only releases the mouse; keep walking with the keys, a click locks again
     this.controls.addEventListener('lock', () => this.showHint());
     this.controls.addEventListener('unlock', () => this.showHint());
@@ -74,6 +79,7 @@ export class WalkMode extends Plugin {
     if (dir.lengthSq() < 1e-6) dir.set(0, 0, -1);
     cam.position.set(p[0], this.eye, p[1]);
     cam.lookAt(cam.position.clone().add(dir.normalize()));
+    document.activeElement?.blur();
     this.active = true;
     this.controls.lock();
     this.showHint();
@@ -118,6 +124,8 @@ export class WalkMode extends Plugin {
     return false;
   }
 }
+
+const MOVE_KEYS = new Set(['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']);
 
 function inside(pts, [x, y]) {
   let c = false;
