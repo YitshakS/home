@@ -125,6 +125,11 @@ export class ModelItem extends Item {
         const tex = ov?.texture || d.texture;
         if (tex) { s.map = loadTexture(tex); s.color.set(0xffffff); s.userData.texSize = [tex.width, tex.height]; }
         if (d.mirrored) s.side = THREE.DoubleSide;
+        // thin panels (side panels, fronts, handles) often share a plane with the cabinet body behind them;
+        // draw them slightly in front so the two surfaces don't flicker into a dark checker pattern
+        if (Math.min(d.width, d.depth, d.height) <= 2.5) {
+          s.polygonOffset = true; s.polygonOffsetFactor = -1; s.polygonOffsetUnits = -4;
+        }
         return s;
       });
       const tm = mats.find((m) => m.userData.texSize);
