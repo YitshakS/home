@@ -4,6 +4,22 @@ export async function selftest(app) {
   const ok = (name, cond, info = '') => out.push(`${cond ? 'PASS' : 'FAIL'} ${name} ${info}`);
   const near = (a, b, e = 0.01) => Math.abs(a - b) <= e;
 
+  // walking: start from the overview (aimed at the middle of the house, on a wall), press W, and move
+  const walk = app.plugin('walk');
+  app.plugin('orbit').view('overview');
+  walk.enter();
+  const p0 = app.camera.position.clone();
+  ok('walk starts off walls', !walk.blocked(p0.x, p0.z), `${p0.x.toFixed(0)},${p0.z.toFixed(0)}`);
+  // face south, down the hallway
+  app.camera.lookAt(p0.x, 160, p0.z + 100);
+  app.camera.updateMatrixWorld();
+  walk.keys.add('KeyW');
+  for (let i = 0; i < 10; i++) walk.step(0.1);
+  walk.keys.clear();
+  ok('walk moves', app.camera.position.distanceTo(p0) > 20, app.camera.position.distanceTo(p0).toFixed(1));
+  ok('walk at eye height', app.camera.position.y === 160);
+  walk.exit();
+
   ok('walls loaded', app.walls.length === 10, app.walls.length);
   ok('rooms loaded', app.rooms.length === 7, app.rooms.length);
   const patch = app.rooms.find((r) => !r.data.name), patchY = patch.bounds().y0;
