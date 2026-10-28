@@ -1,0 +1,15 @@
+{
+  "name": "beit-3d",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node tools/build.mjs"
+  },
+  "dependencies": {
+    "lil-gui": "0.20.0",
+    "three": "0.170.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.24.2"
+  }
+}
