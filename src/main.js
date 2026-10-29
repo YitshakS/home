@@ -8,6 +8,7 @@ import './structure/Room.js';
 import './items/ModelItem.js';
 import './items/BarStool.js';
 import './items/BarStoolV1.js';
+import './items/Countertop.js';
 import './items/CrossBrace.js';
 import './items/MissingItem.js';
 

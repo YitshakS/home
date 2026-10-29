@@ -1103,39 +1103,6 @@
   "color": "#b08068"
  },
  {
-  "id": "eb268a5b-4201-4112-9afb-d67086798828",
-  "type": "model",
-  "name": "משטח אי - גוף",
-  "model": "models/65/________-____.obj",
-  "x": 1546.8,
-  "y": 875,
-  "elevation": 86,
-  "width": 317.5,
-  "depth": 40,
-  "height": 3.8,
-  "angle": 0,
-  "color": "#d2bfa3"
- },
- {
-  "id": "f1630b95-6881-4e7f-b0dd-fb8698e52a60",
-  "type": "model",
-  "name": "משטח אי - לוח עליון (טקסטורה)",
-  "model": "models/66/________-____________________.obj",
-  "x": 1546.8,
-  "y": 875,
-  "elevation": 89.8,
-  "width": 317.5,
-  "depth": 40,
-  "height": 0.2,
-  "angle": 0,
-  "texture": {
-   "image": "textures/caesar600.jpg",
-   "name": "Caesarstone 600",
-   "width": 314,
-   "height": 119.2
-  }
- },
- {
   "id": "6894b52a-c35b-4265-8715-2a311e9ca7ba",
   "type": "model",
   "name": "משטח אבן קיסר 580 א - לוח עליון (טקסטורה)",
@@ -2150,39 +2117,6 @@
   "color": "#4a4946"
  },
  {
-  "id": "502a7888-a5a5-4045-954f-c83edff30815",
-  "type": "model",
-  "name": "משטח אי - גוף",
-  "model": "models/65/________-____.obj",
-  "x": 1546.8,
-  "y": 950.2,
-  "elevation": 86,
-  "width": 317.5,
-  "depth": 18.4,
-  "height": 3.8,
-  "angle": 0,
-  "color": "#d2bfa3"
- },
- {
-  "id": "d933521f-ec33-47bc-90b3-dd945435b346",
-  "type": "model",
-  "name": "משטח אי - לוח עליון (טקסטורה)",
-  "model": "models/66/________-____________________.obj",
-  "x": 1546.8,
-  "y": 950.2,
-  "elevation": 89.8,
-  "width": 317.5,
-  "depth": 18.4,
-  "height": 0.2,
-  "angle": 0,
-  "texture": {
-   "image": "textures/caesar600.jpg",
-   "name": "Caesarstone 600",
-   "width": 314,
-   "height": 119.2
-  }
- },
- {
   "id": "f579ef80-8216-4bdc-ad47-0d3548e4b199",
   "type": "model",
   "name": "משטח אבן קיסר 580 ב - לוח עליון (טקסטורה)",
@@ -2202,39 +2136,6 @@
   }
  },
  {
-  "id": "2c4c4e5a-6525-4977-ba11-6042c65c88d9",
-  "type": "model",
-  "name": "משטח אי - גוף",
-  "model": "models/65/________-____.obj",
-  "x": 1454.525,
-  "y": 918,
-  "elevation": 86,
-  "width": 132.95,
-  "depth": 46,
-  "height": 3.8,
-  "angle": 0,
-  "color": "#d2bfa3"
- },
- {
-  "id": "ec57f18b-15db-4336-b91e-c4e6aa370daa",
-  "type": "model",
-  "name": "משטח אי - לוח עליון (טקסטורה)",
-  "model": "models/66/________-____________________.obj",
-  "x": 1454.525,
-  "y": 918,
-  "elevation": 89.8,
-  "width": 132.95,
-  "depth": 46,
-  "height": 0.2,
-  "angle": 0,
-  "texture": {
-   "image": "textures/caesar600.jpg",
-   "name": "Caesarstone 600",
-   "width": 314,
-   "height": 119.2
-  }
- },
- {
   "id": "aa057a3c-4abb-4043-99a0-a24a593bc7f4",
   "type": "model",
   "name": "משטח אבן קיסר 580 ב - לוח עליון (טקסטורה)",
@@ -2251,39 +2152,6 @@
    "name": "Caesarstone 580",
    "width": 195.1,
    "height": 62.6
-  }
- },
- {
-  "id": "b13fe012-7288-42e2-a140-86a1667bf7dd",
-  "type": "model",
-  "name": "משטח אי - גוף",
-  "model": "models/65/________-____.obj",
-  "x": 1634.275,
-  "y": 918,
-  "elevation": 86,
-  "width": 142.55,
-  "depth": 46,
-  "height": 3.8,
-  "angle": 0,
-  "color": "#d2bfa3"
- },
- {
-  "id": "258ec2e1-370a-441d-af6f-a6c27071eb6c",
-  "type": "model",
-  "name": "משטח אי - לוח עליון (טקסטורה)",
-  "model": "models/66/________-____________________.obj",
-  "x": 1634.275,
-  "y": 918,
-  "elevation": 89.8,
-  "width": 142.55,
-  "depth": 46,
-  "height": 0.2,
-  "angle": 0,
-  "texture": {
-   "image": "textures/caesar600.jpg",
-   "name": "Caesarstone 600",
-   "width": 314,
-   "height": 119.2
   }
  },
  {
@@ -3940,5 +3808,59 @@
   "y": 841,
   "elevation": 0,
   "angle": 0
+ },
+ {
+  "id": "island-top",
+  "type": "countertop",
+  "name": "משטח אי (לוח אחד)",
+  "x": 0,
+  "y": 0,
+  "elevation": 86,
+  "thickness": 4,
+  "points": [
+   [
+    1388.05,
+    855
+   ],
+   [
+    1705.55,
+    855
+   ],
+   [
+    1705.55,
+    959.4
+   ],
+   [
+    1388.05,
+    959.4
+   ]
+  ],
+  "holes": [
+   [
+    [
+     1521,
+     895
+    ],
+    [
+     1563,
+     895
+    ],
+    [
+     1563,
+     941
+    ],
+    [
+     1521,
+     941
+    ]
+   ]
+  ],
+  "texture": {
+   "image": "textures/caesar600.jpg",
+   "name": "Caesarstone 600",
+   "width": 314,
+   "height": 119.2
+  },
+  "edgeColor": "#d2bfa3"
  }
 ]
