@@ -21,8 +21,9 @@
 | `assets/` | מודלים (OBJ שהגיעו מ-Sweet Home 3D, או glTF) וטקסטורות |
 | `src/core/` | המנוע: `App`, מחלקת הבסיס `Item`, מחלקת הבסיס `Plugin`, `registry` |
 | `src/structure/` | `Wall`, `Room`, עריכת מבנה (הזזת קירות, שינוי גודל חדר) |
-| `src/items/` | `ModelItem` (מודל מוכן), `BarStool` (כסא הבר שבנינו), `MissingItem` |
+| `src/items/` | `ModelItem` (מודל מוכן), `BarStoolV1` ו-`BarStool` (כסאות הבר), `CrossBrace` (X על קרשים), `Countertop` (משטח שלם עם חורים), `MissingItem` |
 | `src/plugins/` | תצוגה, הליכה, פאנל, בחירה ומדידה בתלת-ממד, תוכנית 2D, ייצוא, שמירה |
+| `אובייקטים-בעבודה/` | אובייקטים שמתכננים בנפרד לפני שנכנסים לבית (כרגע כסא הבר, כמה גרסאות), כל אחד בדף HTML עצמאי |
 | `tools/` | בנייה, ייבוא חד-פעמי מ-Sweet Home 3D, משיכת נתונים מדף שמור |
 
 ## הוספה והסרה
