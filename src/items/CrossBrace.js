@@ -19,7 +19,7 @@ export class CrossBrace extends Item {
   build() {
     const { width: W, height: H, depth: D, band, boards, groove, color } = this.data;
     const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.7 });
-    mat.polygonOffset = true; mat.polygonOffsetFactor = -1; mat.polygonOffsetUnits = -4;
+    mat.polygonOffset = true; mat.polygonOffsetFactor = 0; mat.polygonOffsetUnits = -8;
     const rect = [[-W / 2, 0], [W / 2, 0], [W / 2, H], [-W / 2, H]];
 
     // grooves between the boards: thin, shallower than the X so the braces sit over them

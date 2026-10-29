@@ -128,7 +128,8 @@ export class ModelItem extends Item {
         // thin panels (side panels, fronts, handles) often share a plane with the cabinet body behind them;
         // draw them slightly in front so the two surfaces don't flicker into a dark checker pattern
         if (Math.min(d.width, d.depth, d.height) <= 2.5) {
-          s.polygonOffset = true; s.polygonOffsetFactor = -1; s.polygonOffsetUnits = -4;
+          // constant offset only: a slope-based offset pulls edge-on faces (like a sink floor seen from the side) in front of everything
+          s.polygonOffset = true; s.polygonOffsetFactor = 0; s.polygonOffsetUnits = -8;
         }
         return s;
       });
