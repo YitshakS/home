@@ -1,4 +1,4 @@
-// Packs everything into one self-contained page: בית.html (opens with a double click, works offline).
+// Packs everything into one self-contained page: index.html (opens with a double click, works offline).
 // usage: npm run build
 import fs from 'node:fs';
 import path from 'node:path';
@@ -37,5 +37,5 @@ const page = fs.readFileSync(rel('src', 'page.html'), 'utf8')
   .replace('__ASSETS__', () => safe(JSON.stringify(assets)))
   .replace('__BUNDLE__', () => js);
 
-fs.writeFileSync(rel('בית.html'), page);
-console.log(`בית.html: ${(page.length / 1048576).toFixed(1)} MB, ${items.length} items, ${Object.keys(assets).length} asset files`);
+fs.writeFileSync(rel('index.html'), page);
+console.log(`index.html: ${(page.length / 1048576).toFixed(1)} MB, ${items.length} items, ${Object.keys(assets).length} asset files`);

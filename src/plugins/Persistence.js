@@ -1,7 +1,7 @@
 import { Plugin } from '../core/Plugin.js';
 import { download } from './Exporter.js';
 
-// Saving and undo. The page carries its own data, so "save" writes a new בית.html with the edits inside.
+// Saving and undo. The page carries its own data, so "save" writes a new index.html with the edits inside.
 // The edited data can also be exported as JSON (tools/pull-data.mjs copies it back into data/).
 export class Persistence extends Plugin {
   static id = 'persist';
@@ -18,7 +18,7 @@ export class Persistence extends Plugin {
 
     const f = app.panel?.folder('שמירה');
     if (!f) return;
-    f.add({ 'שמור (בית.html)': () => this.saveHTML() }, 'שמור (בית.html)');
+    f.add({ 'שמור (index.html)': () => this.saveHTML() }, 'שמור (index.html)');
     f.add({ 'בטל פעולה אחרונה (Ctrl+Z)': () => this.undo() }, 'בטל פעולה אחרונה (Ctrl+Z)');
     f.add({ 'ייצוא נתונים (JSON)': () => this.exportJSON() }, 'ייצוא נתונים (JSON)');
   }
@@ -48,11 +48,11 @@ export class Persistence extends Plugin {
     const html = this.pageWithData();
     try {
       if (window.showSaveFilePicker) {
-        const h = await showSaveFilePicker({ suggestedName: 'בית.html', types: [{ description: 'דף HTML', accept: { 'text/html': ['.html'] } }] });
+        const h = await showSaveFilePicker({ suggestedName: 'index.html', types: [{ description: 'דף HTML', accept: { 'text/html': ['.html'] } }] });
         const w = await h.createWritable();
         await w.write(html);
         await w.close();
-      } else download(new Blob([html], { type: 'text/html' }), 'בית.html');
+      } else download(new Blob([html], { type: 'text/html' }), 'index.html');
       this.dirty = false;
     } catch (e) { if (e.name !== 'AbortError') alert('השמירה נכשלה: ' + e.message); }
   }

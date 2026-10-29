@@ -1,11 +1,11 @@
-// Copies the house data out of a saved בית.html back into data/ (after editing and saving in the browser).
-// usage: node tools/pull-data.mjs [path-to-saved-page]   (default: ./בית.html)
+// Copies the house data out of a saved index.html back into data/ (after editing and saving in the browser).
+// usage: node tools/pull-data.mjs [path-to-saved-page]   (default: ./index.html)
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const page = fs.readFileSync(process.argv[2] || path.join(ROOT, 'בית.html'), 'utf8');
+const page = fs.readFileSync(process.argv[2] || path.join(ROOT, 'index.html'), 'utf8');
 const grab = (id) => {
   const m = page.match(new RegExp(`<script id="${id}" type="application/json">([\\s\\S]*?)</script>`));
   if (!m) throw new Error(`no ${id} in page`);
