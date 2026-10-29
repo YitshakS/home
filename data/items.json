@@ -3144,15 +3144,6 @@
   "color": "#d4d1cb"
  },
  {
-  "id": "bar-stool-1",
-  "type": "bar-stool",
-  "name": "כסא בר",
-  "x": 1550,
-  "y": 841,
-  "elevation": 0,
-  "angle": 0
- },
- {
   "id": "barn-x-west",
   "type": "cross-brace",
   "name": "דלת אסם מערב - X על 8 קרשים",
@@ -3895,5 +3886,59 @@
   "angle": 0,
   "group": "גב האי - גאודה",
   "color": "#a8b3a7"
+ },
+ {
+  "id": "stool-v1-1",
+  "type": "bar-stool-v1",
+  "name": "כסא בר 1",
+  "x": 1411.8,
+  "y": 841,
+  "elevation": 0,
+  "angle": 0
+ },
+ {
+  "id": "stool-v1-2",
+  "type": "bar-stool-v1",
+  "name": "כסא בר 2",
+  "x": 1465.8,
+  "y": 841,
+  "elevation": 0,
+  "angle": 0
+ },
+ {
+  "id": "stool-v1-3",
+  "type": "bar-stool-v1",
+  "name": "כסא בר 3",
+  "x": 1519.8,
+  "y": 841,
+  "elevation": 0,
+  "angle": 0
+ },
+ {
+  "id": "stool-v1-4",
+  "type": "bar-stool-v1",
+  "name": "כסא בר 4",
+  "x": 1573.8,
+  "y": 841,
+  "elevation": 0,
+  "angle": 0
+ },
+ {
+  "id": "stool-v1-5",
+  "type": "bar-stool-v1",
+  "name": "כסא בר 5",
+  "x": 1627.8,
+  "y": 841,
+  "elevation": 0,
+  "angle": 0
+ },
+ {
+  "id": "stool-v1-6",
+  "type": "bar-stool-v1",
+  "name": "כסא בר 6",
+  "x": 1681.8,
+  "y": 841,
+  "elevation": 0,
+  "angle": 0
  }
 ]
