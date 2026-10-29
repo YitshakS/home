@@ -3785,7 +3785,8 @@
    "width": 314,
    "height": 119.2
   },
-  "edgeColor": "#d2bfa3"
+  "edgeColor": "#d2bfa3",
+  "textureRotation": 180
  },
  {
   "id": "run-top-580b",

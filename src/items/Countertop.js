@@ -6,6 +6,7 @@ import { assetURL } from '../core/assets.js';
 // A work surface cut from one slab: any outline (plan points, cm) with optional holes (sink, hob), a thickness,
 // and one stone texture laid across the whole top as a single continuous piece - no seams between parts.
 // The texture is scaled to just cover the slab (it keeps its proportions; whatever sticks out is cropped).
+// textureRotation: 180 turns the pattern half a turn about the slab centre (no other angle is supported).
 // x / y are an offset from the plan coordinates the outline is written in (0, 0 unless the slab is dragged).
 export class Countertop extends Item {
   static type = 'countertop';
@@ -39,8 +40,14 @@ export class Countertop extends Item {
       t.wrapS = t.wrapT = THREE.RepeatWrapping;
       t.colorSpace = THREE.SRGBColorSpace;
       // extruded caps carry plan coordinates (cm) as their UVs: stretch them over the texture's real size
-      t.repeat.set(1 / (tw * k), 1 / (th * k));
-      t.offset.set(-x0 * t.repeat.x, -y0 * t.repeat.y + (1 - H * t.repeat.y) / 2);
+      const rx = 1 / (tw * k), ry = 1 / (th * k);
+      let ox = -x0 * rx, oy = -y0 * ry + (1 - H * ry) / 2;
+      if (d.textureRotation === 180) {
+        // a true 180° turn of the pattern about the slab centre (not a mirror): negate the scale, shift the offset
+        ox += 2 * rx * ((x0 + x1) / 2); oy += 2 * ry * ((y0 + y1) / 2);
+        t.repeat.set(-rx, -ry);
+      } else t.repeat.set(rx, ry);
+      t.offset.set(ox, oy);
       top.map = t;
       top.color.set(0xffffff);
     }
