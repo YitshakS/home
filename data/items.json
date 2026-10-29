@@ -412,36 +412,6 @@
   "color": "#a8b3a7"
  },
  {
-  "id": "dbdc5d5d-2827-4500-a25c-acbcee6cfbc1",
-  "type": "model",
-  "name": "דלת אסם מערב - X",
-  "model": "models/19/_____________-_X.obj",
-  "x": 1389.8,
-  "y": 925,
-  "elevation": 16,
-  "width": 1,
-  "depth": 48,
-  "height": 64,
-  "angle": 0,
-  "group": "דלת אסם - קצה מערבי של האי",
-  "color": "#a8b3a7"
- },
- {
-  "id": "31d974a7-bf44-40a4-9cb5-460eeb7b0090",
-  "type": "model",
-  "name": "דלת אסם מערב - X",
-  "model": "models/20/_____________-_X.obj",
-  "x": 1389.8,
-  "y": 925,
-  "elevation": 16,
-  "width": 1,
-  "depth": 48,
-  "height": 64,
-  "angle": 0,
-  "group": "דלת אסם - קצה מערבי של האי",
-  "color": "#a8b3a7"
- },
- {
   "id": "411decf1-6fe7-45a5-8905-c20317ba8935",
   "type": "model",
   "name": "דלת אסם מזרח - לוח",
@@ -512,36 +482,6 @@
   "width": 1,
   "depth": 48,
   "height": 6,
-  "angle": 0,
-  "group": "דלת אסם - קצה מזרחי של האי",
-  "color": "#a8b3a7"
- },
- {
-  "id": "026c93c7-8330-4ac4-a7bf-81dcb57d2be5",
-  "type": "model",
-  "name": "דלת אסם מזרח - X",
-  "model": "models/21/_____________-_X.obj",
-  "x": 1703.8,
-  "y": 925,
-  "elevation": 16,
-  "width": 1,
-  "depth": 48,
-  "height": 64,
-  "angle": 0,
-  "group": "דלת אסם - קצה מזרחי של האי",
-  "color": "#a8b3a7"
- },
- {
-  "id": "d4dc9048-bfb4-4ca2-914f-30c99169ce26",
-  "type": "model",
-  "name": "דלת אסם מזרח - X",
-  "model": "models/22/_____________-_X.obj",
-  "x": 1703.8,
-  "y": 925,
-  "elevation": 16,
-  "width": 1,
-  "depth": 48,
-  "height": 64,
   "angle": 0,
   "group": "דלת אסם - קצה מזרחי של האי",
   "color": "#a8b3a7"
@@ -3946,5 +3886,29 @@
   "angle": 0,
   "group": "גב האי - גאודה",
   "color": "#a8b3a7"
+ },
+ {
+  "id": "barn-x-west",
+  "type": "cross-brace",
+  "name": "דלת אסם מערב - X על 8 קרשים",
+  "group": "דלת אסם - קצה מערבי של האי",
+  "x": 1390.3,
+  "y": 925,
+  "elevation": 16,
+  "angle": 1.5707963267948966,
+  "width": 48,
+  "height": 64
+ },
+ {
+  "id": "barn-x-east",
+  "type": "cross-brace",
+  "name": "דלת אסם מזרח - X על 8 קרשים",
+  "group": "דלת אסם - קצה מזרחי של האי",
+  "x": 1703.3,
+  "y": 925,
+  "elevation": 16,
+  "angle": -1.5707963267948966,
+  "width": 48,
+  "height": 64
  }
 ]
