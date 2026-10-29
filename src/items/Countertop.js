@@ -44,7 +44,8 @@ export class Countertop extends Item {
       top.map = t;
       top.color.set(0xffffff);
     }
-    const edge = new THREE.MeshStandardMaterial({ color: d.edgeColor, roughness: 0.85 });
+    // no edgeColor: the edges carry the same stone texture as the top (thin sheets)
+    const edge = d.edgeColor ? new THREE.MeshStandardMaterial({ color: d.edgeColor, roughness: 0.85 }) : top;
     // ExtrudeGeometry: group 0 = top and bottom faces, group 1 = the edges
     this.object.add(new THREE.Mesh(g, [top, edge]));
   }

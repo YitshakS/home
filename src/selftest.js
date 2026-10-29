@@ -23,7 +23,7 @@ export async function selftest(app) {
   ok('walls loaded', app.walls.length === 10, app.walls.length);
   ok('rooms loaded', app.rooms.length === 7, app.rooms.length);
   const patch = app.rooms.find((r) => !r.data.name), patchY = patch.bounds().y0;
-  ok('furniture loaded', app.furniture.length === 260, app.furniture.length);
+  ok('furniture loaded', app.furniture.length === 257, app.furniture.length);
   ok('meshes built', app.furniture.every((i) => i.object.children.length > 0));
 
   const living = app.rooms.find((r) => r.data.name.startsWith('סלון'));
@@ -53,7 +53,7 @@ export async function selftest(app) {
   stool.data.x += 10;
   await app.update(stool, { rebuild: false });
   const ser = app.serialize();
-  ok('serialize', ser.house.walls.length === 10 && ser.items.length === 260 && ser.items.some((i) => i.type === 'bar-stool-v1' && near(i.x, stool.data.x)));
+  ok('serialize', ser.house.walls.length === 10 && ser.items.length === 257 && ser.items.some((i) => i.type === 'bar-stool-v1' && near(i.x, stool.data.x)));
 
   const persist = app.plugin('persist');
   await new Promise((r) => setTimeout(r, 400));

@@ -1122,25 +1122,6 @@
   }
  },
  {
-  "id": "be4b78f5-1743-4838-af7f-588a3d1d5934",
-  "type": "model",
-  "name": "משטח אבן קיסר 580 ב - לוח עליון (טקסטורה)",
-  "model": "models/68/______________580___-____________________.obj",
-  "x": 1496.9,
-  "y": 1067.8,
-  "elevation": 86,
-  "width": 193.6,
-  "depth": 14.4,
-  "height": 0.8,
-  "angle": 0,
-  "texture": {
-   "image": "textures/caesar580.jpg",
-   "name": "Caesarstone 580",
-   "width": 195.1,
-   "height": 62.6
-  }
- },
- {
   "id": "b9ce1b7a-ff82-403e-8caa-e3646a89653c",
   "type": "model",
   "name": "חזית דלת מדורגת",
@@ -2115,63 +2096,6 @@
   "height": 52.6,
   "angle": 0,
   "color": "#4a4946"
- },
- {
-  "id": "f579ef80-8216-4bdc-ad47-0d3548e4b199",
-  "type": "model",
-  "name": "משטח אבן קיסר 580 ב - לוח עליון (טקסטורה)",
-  "model": "models/68/______________580___-____________________.obj",
-  "x": 1496.9,
-  "y": 1120.75,
-  "elevation": 86,
-  "width": 193.6,
-  "depth": 8.5,
-  "height": 0.8,
-  "angle": 0,
-  "texture": {
-   "image": "textures/caesar580.jpg",
-   "name": "Caesarstone 580",
-   "width": 195.1,
-   "height": 62.6
-  }
- },
- {
-  "id": "aa057a3c-4abb-4043-99a0-a24a593bc7f4",
-  "type": "model",
-  "name": "משטח אבן קיסר 580 ב - לוח עליון (טקסטורה)",
-  "model": "models/68/______________580___-____________________.obj",
-  "x": 1440.05,
-  "y": 1095.75,
-  "elevation": 86,
-  "width": 79.9,
-  "depth": 41.5,
-  "height": 0.8,
-  "angle": 0,
-  "texture": {
-   "image": "textures/caesar580.jpg",
-   "name": "Caesarstone 580",
-   "width": 195.1,
-   "height": 62.6
-  }
- },
- {
-  "id": "51bea8cc-20eb-4cd2-967b-8fc64e420cb0",
-  "type": "model",
-  "name": "משטח אבן קיסר 580 ב - לוח עליון (טקסטורה)",
-  "model": "models/68/______________580___-____________________.obj",
-  "x": 1561.85,
-  "y": 1095.75,
-  "elevation": 86,
-  "width": 63.7,
-  "depth": 41.5,
-  "height": 0.8,
-  "angle": 0,
-  "texture": {
-   "image": "textures/caesar580.jpg",
-   "name": "Caesarstone 580",
-   "width": 195.1,
-   "height": 62.6
-  }
  },
  {
   "id": "48ee4eea-3a6a-4580-b748-d651ef89ed0f",
@@ -3862,5 +3786,58 @@
    "height": 119.2
   },
   "edgeColor": "#d2bfa3"
+ },
+ {
+  "id": "run-top-580b",
+  "type": "countertop",
+  "name": "משטח אבן קיסר 580 ב (לוח אחד)",
+  "x": 0,
+  "y": 0,
+  "elevation": 86,
+  "thickness": 0.8,
+  "points": [
+   [
+    1400.1,
+    1060.6
+   ],
+   [
+    1593.7,
+    1060.6
+   ],
+   [
+    1593.7,
+    1125
+   ],
+   [
+    1400.1,
+    1125
+   ]
+  ],
+  "holes": [
+   [
+    [
+     1480,
+     1075
+    ],
+    [
+     1530,
+     1075
+    ],
+    [
+     1530,
+     1116.5
+    ],
+    [
+     1480,
+     1116.5
+    ]
+   ]
+  ],
+  "texture": {
+   "image": "textures/caesar580.jpg",
+   "name": "Caesarstone 580",
+   "width": 195.1,
+   "height": 62.6
+  }
  }
 ]
