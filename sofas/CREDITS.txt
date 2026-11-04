@@ -1,0 +1,5 @@
+Sofa models, all from sketchfab.com, license CC Attribution (credit the creator):
+1-office-sofa.glb        "Office Sofa -25MB" by Mehdi Shahsavan
+2-modern-sofa.glb        "Modern Sofa" by Siba Santosh Das
+3-elm-low-poly-sofa.glb  "Elm low poly sofa" by L_Krajewski
+4-grey-sofa.glb          "Grey Sofa" by Raphael Escamilla
