@@ -116,6 +116,14 @@ export class ModelItem extends Item {
       .makeScale((d.mirrored ? -1 : 1) * d.width / (size.x || 1), d.height / (size.y || 1), d.depth / (size.z || 1))
       .multiply(new THREE.Matrix4().makeTranslation(-(box.min.x + box.max.x) / 2, -box.min.y, -(box.min.z + box.max.z) / 2));
 
+    // data.frame = {passage, jambEdge}: a door model whose frame is too thin or too wide. The clear passage between the jambs becomes
+    // "passage" cm (data.width stays the outer size, frame included) by remapping x: model half-width jambEdge (where the jamb starts) -> passage / 2,
+    // the outer edge stays, so the jambs get thicker and the leaf fits the opening
+    let fmap = null;
+    if (d.frame) {
+      const ei = d.frame.jambEdge * Math.abs(d.width / (size.x || 1)), eo = Math.abs(d.width) / 2, pi = d.frame.passage / 2;
+      fmap = (x) => { const a = Math.abs(x), r = a <= ei ? (a * pi) / ei : a <= eo ? pi + ((a - ei) * (eo - pi)) / (eo - ei) : a; return x < 0 ? -r : r; };
+    }
     // data.hinges = [{names:[group names], pivot:[x,y,z] in the model's own coordinates, axis:'x', angle: degrees}]: the named parts of the model turn about the pivot when clicked
     const hingeGroups = [];
     this.hinges = [];
@@ -133,6 +141,7 @@ export class ModelItem extends Item {
     this.lid = null;
     if (d.lid) {
       const p = new THREE.Vector3(...d.lid.pivot).applyMatrix4(fit);
+      if (fmap) p.x = fmap(p.x);
       lidGroup = new THREE.Group();
       lidGroup.position.copy(p);
       this.object.add(lidGroup);
@@ -143,6 +152,9 @@ export class ModelItem extends Item {
       if (!o.isMesh) return;
       const hg = hingeGroups.find((x) => x.names.has(o.name) || x.names.has(o.parent?.name));
       let g = o.geometry.clone().applyMatrix4(new THREE.Matrix4().multiplyMatrices(fit, o.matrixWorld));
+      // mirroring (negative x scale) turns every triangle inside out: restore the winding so the front faces stay front
+      if (d.mirrored) g = flipWinding(g);
+      if (fmap) { const px = g.attributes.position; for (let i = 0; i < px.count; i++) px.setX(i, fmap(px.getX(i))); px.needsUpdate = true; g.computeBoundingBox(); g.computeBoundingSphere(); }
       const mats = (Array.isArray(o.material) ? o.material : [o.material]).map((m) => {
         const ov = d.materials?.[m?.name];
         // glTF models keep their own materials (gloss, metal, normal maps) unless shininess is set; OBJ models are made matte
@@ -152,7 +164,6 @@ export class ModelItem extends Item {
         if (ov?.color) { s.color.set(ov.color); s.map = null; }
         const tex = ov?.texture || d.texture;
         if (tex) { s.map = loadTexture(tex); s.color.set(0xffffff); s.userData.texSize = [tex.width, tex.height]; }
-        if (d.mirrored) s.side = THREE.DoubleSide;
         // thin panels (side panels, fronts, handles) often share a plane with the cabinet body behind them;
         // draw them slightly in front so the two surfaces don't flicker into a dark checker pattern
         if (Math.min(d.width, d.depth, d.height) <= 2.5) {
@@ -173,4 +184,13 @@ export class ModelItem extends Item {
     });
   }
 }
+// swap two vertices of every triangle (after a mirror the faces are wound the wrong way round)
+function flipWinding(g) {
+  if (!g.index) g.setIndex([...Array(g.attributes.position.count).keys()]);
+  const a = g.index.array;
+  for (let i = 0; i < a.length; i += 3) { const t = a[i + 1]; a[i + 1] = a[i + 2]; a[i + 2] = t; }
+  g.index.needsUpdate = true;
+  return g;
+}
+
 registry.add(ModelItem);

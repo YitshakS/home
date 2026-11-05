@@ -107,7 +107,7 @@ export class OrbitView extends Plugin {
       kitchen: { label: 'מטבח', pos: [1000, 180, 450], target: [995, 120, 875] },
       living: { label: 'סלון ופינת אוכל', pos: [1450, 150, 310], target: [1810, 105, 490] },
       toilets: { label: 'השוואת אסלות', pos: [1790, 230, -520], target: [1790, 25, -100] },
-      wc: { label: 'שירותי אורחים', pos: [1775, 160, 341], target: [1763, 120, 566], walk: { x: 1775, z: 341, yaw: Math.PI } },
+      wc: { label: 'שירותי אורחים', pos: [1775, 160, 341], target: [1760, 120, 534], walk: { x: 1775, z: 341, yaw: Math.PI } },
     };
   }
 
