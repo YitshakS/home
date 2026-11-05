@@ -107,6 +107,7 @@ export class ModelItem extends Item {
   async build() {
     const d = this.data;
     const src = await loadModel(d.model);
+    const glb = /\.(glb|gltf)$/i.test(d.model);
     src.updateMatrixWorld(true);
     const box = new THREE.Box3().setFromObject(src);
     const size = box.getSize(new THREE.Vector3());
@@ -114,12 +115,25 @@ export class ModelItem extends Item {
       .makeScale((d.mirrored ? -1 : 1) * d.width / (size.x || 1), d.height / (size.y || 1), d.depth / (size.z || 1))
       .multiply(new THREE.Matrix4().makeTranslation(-(box.min.x + box.max.x) / 2, -box.min.y, -(box.min.z + box.max.z) / 2));
 
+    // optional hinged part (a toilet lid): meshes named lid* are put in a group that turns about the hinge when clicked (see DoorToggle)
+    let lidGroup = null;
+    this.lid = null;
+    if (d.lid) {
+      const p = new THREE.Vector3(...d.lid.pivot).applyMatrix4(fit);
+      lidGroup = new THREE.Group();
+      lidGroup.position.copy(p);
+      this.object.add(lidGroup);
+      this.lid = { group: lidGroup, t: 0, target: 0 };
+    }
+
     src.traverse((o) => {
       if (!o.isMesh) return;
       let g = o.geometry.clone().applyMatrix4(new THREE.Matrix4().multiplyMatrices(fit, o.matrixWorld));
       const mats = (Array.isArray(o.material) ? o.material : [o.material]).map((m) => {
         const ov = d.materials?.[m?.name];
-        const s = toStandard(m, ov || (d.shininess !== undefined ? { shininess: d.shininess } : undefined));
+        // glTF models keep their own materials (gloss, metal, normal maps) unless shininess is set; OBJ models are made matte
+        const s = glb && m?.isMeshStandardMaterial ? m.clone() : toStandard(m, ov || (d.shininess !== undefined ? { shininess: d.shininess } : undefined));
+        if (glb && m?.isMeshStandardMaterial && d.shininess !== undefined) s.roughness = 0.85 - d.shininess * 0.75;
         if (d.color) { s.color.set(d.color); s.map = null; }
         if (ov?.color) { s.color.set(ov.color); s.map = null; }
         const tex = ov?.texture || d.texture;
@@ -137,7 +151,8 @@ export class ModelItem extends Item {
       // generated SH3D boxes carry no texture coordinates: lay the texture at its real size in cm
       if (tm && !g.attributes.uv) g = boxUV(g, ...tm.userData.texSize);
       const mesh = new THREE.Mesh(g, mats.length > 1 ? mats : mats[0]);
-      this.object.add(mesh);
+      if (lidGroup && /^lid/.test(o.name)) { mesh.position.copy(lidGroup.position).negate(); lidGroup.add(mesh); }
+      else this.object.add(mesh);
     });
   }
 }

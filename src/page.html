@@ -10,7 +10,9 @@
   #app { position: fixed; inset: 0; }
   #app canvas, #app .snap { display: block; width: 100%; height: 100%; }
   #app .snap { position: absolute; inset: 0; }
-  #loading { position: fixed; inset: 0; display: grid; place-items: center; font-size: 22px; color: #1d2b36; background: #eef3f6; z-index: 50; }
+  #loading { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; font-size: 22px; color: #1d2b36; background: #eef3f6; z-index: 50; }
+  #loading .spin { width: 24px; height: 24px; border: 7px solid #d6e2ea; border-top-color: #5aa7f0; border-radius: 50%; animation: spin 1.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
   .lil-gui.root { direction: rtl; --width: 300px; }
   .lil-gui .controller { direction: rtl; }
   .info-box { position: fixed; left: 12px; bottom: 12px; background: #ffffffee; color: #1b1b1b; border: 1px solid #d0d4d8;
@@ -35,13 +37,14 @@
   .plan-view canvas { flex: 1; width: 100%; min-height: 0; touch-action: none; }
   @media (max-width: 700px) { .plan-bar { padding-right: 10px; } .lil-gui.root { --width: 240px; } }
 </style>
-<script id="house-data" type="application/json">__HOUSE__</script>
-<script id="items-data" type="application/json">__ITEMS__</script>
-<script id="assets-data" type="application/json">__ASSETS__</script>
 </head>
 <body>
 <div id="app"></div>
-<div id="loading">טוען את הבית…</div>
+<div id="loading"><div class="spin"></div><div>טוען את הבית…</div></div>
+<!-- the big data blocks come after the loading screen so it can paint first -->
+<script id="house-data" type="application/json">__HOUSE__</script>
+<script id="items-data" type="application/json">__ITEMS__</script>
+<script id="assets-data" type="application/json">__ASSETS__</script>
 <script>__BUNDLE__</script>
 </body>
 </html>

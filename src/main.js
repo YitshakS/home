@@ -12,10 +12,12 @@ import './items/Countertop.js';
 import './items/CrossBrace.js';
 import './items/Vanity.js';
 import './items/Label.js';
+import './items/Light.js';
 import './items/MissingItem.js';
 
 import { OrbitView } from './plugins/OrbitView.js';
 import { WalkMode } from './plugins/WalkMode.js';
+import { DoorToggle } from './plugins/DoorToggle.js';
 import { ControlPanel } from './plugins/ControlPanel.js';
 import { Selection3D } from './plugins/Selection3D.js';
 import { PlanView2D } from './plugins/PlanView2D.js';
@@ -35,6 +37,7 @@ async function main() {
   // order matters only where a plugin uses another one's buttons/views
   app.use(OrbitView);
   app.use(WalkMode);
+  app.use(DoorToggle);
   app.use(ControlPanel);
   app.use(Selection3D);
   app.use(PlanView2D);

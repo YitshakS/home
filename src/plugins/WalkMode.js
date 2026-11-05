@@ -1,18 +1,19 @@
 import * as THREE from 'three';
-import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
 import { Plugin } from '../core/Plugin.js';
 
-// Walk through the house at eye height: mouse looks around, W/A/S/D or arrows move, Esc leaves.
-// Walls stop you, door openings let you through.
+// Walk through the house at eye height. The mouse cursor stays visible: drag with the mouse (or a finger) to look around,
+// the wheel or W/A/S/D / arrows move you, Esc leaves. Walls stop you, door openings let you through.
 export class WalkMode extends Plugin {
   static id = 'walk';
   eye = 160;
   speed = 160; // cm per second
   radius = 20;
+  wheelStep = 0.6; // cm of walking per wheel unit (one notch is about 100 units)
+  yaw = 0;
+  pitch = 0;
 
   install() {
     const app = this.app, el = app.renderer.domElement;
-    this.controls = new PointerLockControls(app.camera, el);
     this.keys = new Set();
     this.active = false;
     // capture phase: the side panel stops key events from its focused button reaching the page
@@ -27,22 +28,42 @@ export class WalkMode extends Plugin {
       if (fresh) this.step(0.08);
     }, true);
     addEventListener('keyup', (e) => this.keys.delete(e.code), true);
-    // Esc inside pointer lock only releases the mouse; keep walking with the keys, a click locks again
-    this.controls.addEventListener('lock', () => this.showHint());
-    this.controls.addEventListener('unlock', () => this.showHint());
-    document.addEventListener('pointerlockerror', () => this.showHint());
-    el.addEventListener('click', () => { if (this.active && !this.controls.isLocked) this.controls.lock(); });
+
+    // looking around: press and drag on the picture (the scene follows the pointer, like street view)
+    let drag = null;
+    el.addEventListener('pointerdown', (e) => {
+      if (!this.active || e.button !== 0) return;
+      drag = { x: e.clientX, y: e.clientY, id: e.pointerId };
+      el.setPointerCapture(e.pointerId);
+      el.style.cursor = 'grabbing';
+    });
+    el.addEventListener('pointermove', (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+      drag.x = e.clientX; drag.y = e.clientY;
+      this.look(this.yaw + dx * 0.004, this.pitch + dy * 0.004);
+    });
+    const end = (e) => { if (drag && e.pointerId === drag.id) { drag = null; el.style.cursor = ''; } };
+    el.addEventListener('pointerup', end);
+    el.addEventListener('pointercancel', end);
+    el.style.touchAction = 'none';
+    // the wheel walks forward and back
+    el.addEventListener('wheel', (e) => {
+      if (!this.active) return;
+      e.preventDefault();
+      this.walk(-e.deltaY * this.wheelStep, 0);
+    }, { passive: false });
 
     this.hint = document.createElement('div');
     this.hint.className = 'walk-hint';
     this.hint.hidden = true;
     document.body.appendChild(this.hint);
 
-    // vertical eye-height slider (cm), shown only in walk mode; press Esc to free the mouse before dragging it
+    // vertical eye-height slider (cm), shown only in walk mode
     this.heightBox = document.createElement('div');
     this.heightBox.className = 'walk-height';
     this.heightBox.hidden = true;
-    this.heightBox.innerHTML = '<span>גובה עיניים</span><span>220</span><input type="range" min="50" max="220" step="5" orient="vertical"><span>50</span><b></b>';
+    this.heightBox.innerHTML = '<span>גובה עיניים</span><span class="mx">250</span><input type="range" min="0" max="250" step="5" orient="vertical"><span>0</span><b></b>';
     this.heightInput = this.heightBox.querySelector('input');
     this.heightLabel = this.heightBox.querySelector('b');
     this.heightInput.addEventListener('input', () => this.setEye(+this.heightInput.value));
@@ -64,11 +85,15 @@ export class WalkMode extends Plugin {
     if (this.active) this.app.camera.position.y = v;
   }
 
+  look(yaw, pitch) {
+    this.yaw = yaw;
+    this.pitch = Math.max(-1.2, Math.min(1.2, pitch));
+    this.app.camera.rotation.set(this.pitch, this.yaw, 0, 'YXZ');
+  }
+
   showHint() {
     this.hint.hidden = !this.active;
-    this.hint.innerHTML = this.controls.isLocked
-      ? 'הזזת העכבר – הסתכלות · W A S D או חצים – הליכה · Esc – שחרור העכבר'
-      : 'לחץ על המסך כדי להסתכל עם העכבר · W A S D או חצים – הליכה · <button>יציאה מהליכה</button>';
+    this.hint.innerHTML = 'גרירה בעכבר – הסתכלות · גלגלת או W A S D או חצים – הליכה · <button>יציאה מהליכה</button>';
     this.hint.querySelector('button')?.addEventListener('click', () => this.exit());
   }
 
@@ -95,13 +120,17 @@ export class WalkMode extends Plugin {
     cam.getWorldDirection(dir);
     dir.y = 0;
     if (dir.lengthSq() < 1e-6) dir.set(0, 0, -1);
+    dir.normalize();
     cam.position.set(p[0], this.eye, p[1]);
-    cam.lookAt(cam.position.clone().add(dir.normalize()));
+    this.look(Math.atan2(-dir.x, -dir.z), 0);
     document.activeElement?.blur();
     this.active = true;
     this.heightBox.hidden = false;
-    this.setEye(this.eye);
-    this.controls.lock();
+    // the slider runs from the floor (0) to the ceiling (the tallest wall); 160 cm is the default eye height of an average adult
+    const ceil = Math.max(...app.walls.map((w) => w.data.height), 250);
+    this.heightInput.max = ceil;
+    this.heightBox.querySelector('.mx').textContent = ceil;
+    this.setEye(Math.min(this.eye, ceil));
     this.showHint();
     app.emit('walk', true);
   }
@@ -110,9 +139,9 @@ export class WalkMode extends Plugin {
     if (!this.active) return;
     this.active = false;
     this.keys.clear();
-    if (this.controls.isLocked) this.controls.unlock();
     this.hint.hidden = true;
     this.heightBox.hidden = true;
+    this.app.renderer.domElement.style.cursor = '';
     const orbit = this.app.plugin('orbit');
     if (orbit) {
       const cam = this.app.camera, dir = new THREE.Vector3();
@@ -123,15 +152,25 @@ export class WalkMode extends Plugin {
     this.app.emit('walk', false);
   }
 
+  // walk forward (f) and sideways (r) by that many cm, in small steps so thin walls can't be jumped; stops at a wall
+  walk(f, r) {
+    const cam = this.app.camera, dist = Math.hypot(f, r);
+    if (!dist) return;
+    const n = Math.ceil(dist / 8), sy = Math.sin(this.yaw), cy = Math.cos(this.yaw);
+    const dx = (-sy * f + cy * r) / n, dz = (-cy * f - sy * r) / n;
+    for (let i = 0; i < n; i++) {
+      const x = cam.position.x + dx, z = cam.position.z + dz;
+      if (this.blocked(x, z) && !this.blocked(cam.position.x, cam.position.z)) break;
+      cam.position.x = x; cam.position.z = z;
+    }
+    cam.position.y = this.eye;
+  }
+
   step(dt) {
     const k = this.keys, f = (k.has('KeyW') || k.has('ArrowUp') ? 1 : 0) - (k.has('KeyS') || k.has('ArrowDown') ? 1 : 0);
     const r = (k.has('KeyD') || k.has('ArrowRight') ? 1 : 0) - (k.has('KeyA') || k.has('ArrowLeft') ? 1 : 0);
     if (!f && !r) return;
-    const cam = this.app.camera, before = cam.position.clone();
-    this.controls.moveForward(f * this.speed * dt);
-    this.controls.moveRight(r * this.speed * dt);
-    if (this.blocked(cam.position.x, cam.position.z) && !this.blocked(before.x, before.z)) cam.position.copy(before);
-    cam.position.y = this.eye;
+    this.walk(f * this.speed * dt, r * this.speed * dt);
   }
 
   blocked(x, y) {

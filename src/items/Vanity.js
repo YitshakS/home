@@ -134,8 +134,12 @@ export class Vanity extends Item {
   get angleDeg() { return +((this.data.angle || 0) * 180 / Math.PI).toFixed(2); }
   set angleDeg(v) { this.data.angle = (v * Math.PI) / 180; }
   build() {
-    this.object.add(buildVanity());
-    const m = buildMirror(); m.position.z = -D / 2 + 3; this.object.add(m);
+    // the model is 110 cm wide; data.width stretches it along the wall (the depth stays as modelled)
+    const g = new THREE.Group();
+    g.add(buildVanity());
+    const m = buildMirror(); m.position.z = -D / 2 + 3; g.add(m);
+    g.scale.x = (this.data.width || W) / W;
+    this.object.add(g);
   }
 }
 registry.add(Vanity);
