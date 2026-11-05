@@ -1,13 +1,14 @@
 import * as THREE from 'three';
 import { Plugin } from '../core/Plugin.js';
 
-// Walk through the house at eye height. The mouse cursor stays visible: drag with the mouse (or a finger) to look around,
+// Walk through the house at eye height. The mouse cursor stays visible: left-drag moves, right-drag turns,
 // the wheel or W/A/S/D / arrows move you, Esc leaves. Walls stop you, door openings let you through.
 export class WalkMode extends Plugin {
   static id = 'walk';
   eye = 160;
   speed = 160; // cm per second
   radius = 20;
+  dragStep = 0.6; // cm of movement per pixel of mouse drag
   wheelStep = 0.6; // cm of walking per wheel unit (one notch is about 100 units)
   yaw = 0;
   pitch = 0;
@@ -29,21 +30,54 @@ export class WalkMode extends Plugin {
     }, true);
     addEventListener('keyup', (e) => this.keys.delete(e.code), true);
 
-    // looking around: press and drag on the picture (the scene follows the pointer, like street view)
+    // left button + drag: the picture follows the pointer (sideways, and up/down = eye height), keeping the angle;
+    // right button + drag: stay in place and turn toward the drag
     let drag = null;
+    const pts = new Map(); // fingers on a touch screen
+    const measure = () => { const a = [...pts.values()]; return { cx: (a[0].x + a[1].x) / 2, cy: (a[0].y + a[1].y) / 2, d: Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y) }; };
+    let two = null, pending = false;
+    el.addEventListener('contextmenu', (e) => { if (this.active) e.preventDefault(); });
     el.addEventListener('pointerdown', (e) => {
-      if (!this.active || e.button !== 0) return;
-      drag = { x: e.clientX, y: e.clientY, id: e.pointerId };
+      if (!this.active) return;
+      if (e.pointerType === 'touch') {
+        pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        two = pts.size === 2 ? measure() : null;
+        try { el.setPointerCapture(e.pointerId); } catch (err) { /* pointer already gone */ }
+        return;
+      }
+      if (e.button !== 0 && e.button !== 2) return;
+      drag = { x: e.clientX, y: e.clientY, id: e.pointerId, b: e.button };
       el.setPointerCapture(e.pointerId);
-      el.style.cursor = 'grabbing';
+      el.style.cursor = e.button === 0 ? 'move' : 'grabbing';
     });
     el.addEventListener('pointermove', (e) => {
+      if (e.pointerType === 'touch' && pts.has(e.pointerId)) {
+        const q = pts.get(e.pointerId), dx = e.clientX - q.x, dy = e.clientY - q.y;
+        q.x = e.clientX; q.y = e.clientY;
+        if (pts.size === 1) this.drag(0, dx, dy); // one finger: move
+        else if (pts.size === 2 && two && !pending) { // two fingers: drag = turn, pinch = walk forward / back
+          // both fingers move in separate events: act once per frame, on both, so a parallel drag is not mistaken for a pinch
+          pending = true;
+          requestAnimationFrame(() => {
+            pending = false;
+            if (pts.size !== 2 || !two) return;
+            const m = measure();
+            if (Math.abs(m.d - two.d) > 0.5) this.walk((m.d - two.d) * 0.8, 0);
+            this.drag(2, m.cx - two.cx, m.cy - two.cy);
+            two = m;
+          });
+        }
+        return;
+      }
       if (!drag || e.pointerId !== drag.id) return;
       const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
       drag.x = e.clientX; drag.y = e.clientY;
-      this.look(this.yaw + dx * 0.004, this.pitch + dy * 0.004);
+      this.drag(drag.b, dx, dy);
     });
-    const end = (e) => { if (drag && e.pointerId === drag.id) { drag = null; el.style.cursor = ''; } };
+    const end = (e) => {
+      if (pts.delete(e.pointerId)) two = pts.size === 2 ? measure() : null;
+      if (drag && e.pointerId === drag.id) { drag = null; el.style.cursor = ''; }
+    };
     el.addEventListener('pointerup', end);
     el.addEventListener('pointercancel', end);
     el.style.touchAction = 'none';
@@ -78,6 +112,14 @@ export class WalkMode extends Plugin {
     });
   }
 
+  // b 0 (left button / one finger): the picture follows the pointer, sideways and up/down = eye height;
+  // b 2 (right button / two fingers): stay in place and turn, the picture follows the pointer
+  drag(b, dx, dy) {
+    if (b === 2) { this.look(this.yaw + dx * 0.004, this.pitch + dy * 0.004); return; }
+    this.walk(0, -dx * this.dragStep);
+    if (dy) this.setEye(Math.max(0, Math.min(+this.heightInput.max, this.eye + dy * this.dragStep)));
+  }
+
   setEye(v) {
     this.eye = v;
     this.heightInput.value = v;
@@ -93,19 +135,20 @@ export class WalkMode extends Plugin {
 
   showHint() {
     this.hint.hidden = !this.active;
-    this.hint.innerHTML = 'גרירה בעכבר – הסתכלות · גלגלת או W A S D או חצים – הליכה · <button>יציאה מהליכה</button>';
+    this.hint.innerHTML = 'קליק שמאלי וגרירה – הזזה · קליק ימני וגרירה – סיבוב · גלגלת או W A S D – קדימה ואחורה · <button>יציאה מהליכה</button>';
     this.hint.querySelector('button')?.addEventListener('click', () => this.exit());
   }
 
-  enter() {
+  // opts {x, z, yaw}: start at that spot (plan x, y) looking that way (yaw 0 = north, -PI/2 = east); otherwise where the view was aimed
+  enter(opts) {
     const app = this.app, orbit = app.plugin('orbit'), cam = app.camera;
     if (orbit) orbit.controls.enabled = false;
     // start where the view was aimed, or in the middle of the biggest room if that's outside the house
     const t = orbit ? orbit.controls.target.clone() : app.houseCenter();
-    let p = [t.x, t.z];
+    let p = opts ? [opts.x, opts.z] : [t.x, t.z];
     const inRoom = app.rooms.some((r) => inside(r.data.points, p));
     const farView = cam.position.distanceTo(t) > 1000; // looking at the whole house from outside
-    if (!inRoom || farView) {
+    if (!opts && (!inRoom || farView)) {
       const big = app.rooms.reduce((a, b) => (b.area() > a.area() ? b : a));
       const b = big.bounds();
       p = [(b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2];
@@ -122,7 +165,7 @@ export class WalkMode extends Plugin {
     if (dir.lengthSq() < 1e-6) dir.set(0, 0, -1);
     dir.normalize();
     cam.position.set(p[0], this.eye, p[1]);
-    this.look(Math.atan2(-dir.x, -dir.z), 0);
+    this.look(opts && opts.yaw !== undefined ? opts.yaw : Math.atan2(-dir.x, -dir.z), 0);
     document.activeElement?.blur();
     this.active = true;
     this.heightBox.hidden = false;

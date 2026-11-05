@@ -28,12 +28,35 @@ export class DoorToggle extends Plugin {
   click(e) {
     const app = this.app, el = app.renderer.domElement, r = el.getBoundingClientRect();
     this.ray.setFromCamera(new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1), app.camera);
-    const hit = this.ray.intersectObjects(app.world.children, true).find((h) => h.object.isMesh && h.object.visible);
+    // a hidden layer (a hidden parent) must not catch clicks
+    const shown = (o) => { for (; o; o = o.parent) if (!o.visible) return false; return true; };
+    const hit = this.ray.intersectObjects(app.world.children, true).find((h) => h.object.isMesh && shown(h.object));
     if (!hit) return;
     for (let o = hit.object; o; o = o.parent) {
+      // a separately hinged part (toilet lid or seat): turn just that part
+      const hg = o.userData?.hinge;
+      if (hg) { hg.target = hg.target ? 0 : 1; this.moving.add(hg); return; }
       const it = o.userData?.item;
-      if (it) { if (DoorToggle.isDoor(it)) this.toggle(it); else if (it.lid) this.toggleLid(it); return; }
+      if (it) {
+        if (it.mixer && it.toggle) it.toggle();
+        else if (DoorToggle.isDoor(it)) this.toggle(it);
+        else if (it.lid && !this.person(it)) this.toggleLid(it); // a toilet with a person shown is moved by the person
+        return;
+      }
     }
+  }
+
+  // the person (if shown) that uses this toilet
+  person(toilet) {
+    for (const p of this.app.items.values()) if (p.data.type === 'person' && p.data.toilet === toilet.id && p.object.visible) return p;
+    return null;
+  }
+
+  // open (true) or close (false) a toilet's own lid
+  setLid(it, open) {
+    if (!it.lid) return;
+    it.lid.target = open ? 1 : 0;
+    this.moving.add(it);
   }
 
   toggle(it) {
@@ -59,10 +82,17 @@ export class DoorToggle extends Plugin {
     const now = performance.now(), dt = this.last ? Math.min(0.1, (now - this.last) / 1000) : 0.016;
     this.last = now;
     for (const it of [...this.moving]) {
+      if (it.isHinge) {
+        const st = dt / this.duration;
+        it.c = it.target > it.c ? Math.min(it.target, it.c + st) : Math.max(it.target, it.c - st);
+        it.group.rotation[it.axis] = (it.angle * Math.PI / 180) * (it.c * it.c * (3 - 2 * it.c));
+        if (it.c === it.target) this.moving.delete(it);
+        continue;
+      }
       if (it.lid && !it.door) {
         const l = it.lid, st = dt / this.duration;
         l.t = l.target > l.t ? Math.min(l.target, l.t + st) : Math.max(l.target, l.t - st);
-        l.group.rotation.x = ((it.data.lid.angle || 100) * Math.PI / 180) * (l.t * l.t * (3 - 2 * l.t));
+        l.group.rotation[it.data.lid.axis || 'x'] = ((it.data.lid.angle || 100) * Math.PI / 180) * (l.t * l.t * (3 - 2 * l.t));
         if (l.t === l.target) this.moving.delete(it);
         continue;
       }

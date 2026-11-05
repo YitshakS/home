@@ -139,6 +139,7 @@ export class Vanity extends Item {
     g.add(buildVanity());
     const m = buildMirror(); m.position.z = -D / 2 + 3; g.add(m);
     g.scale.x = (this.data.width || W) / W;
+    g.scale.z = (this.data.depth || 43) / 43; // the model is about 43 cm deep (with the mirror)
     this.object.add(g);
   }
 }

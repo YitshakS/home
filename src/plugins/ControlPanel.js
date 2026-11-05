@@ -15,14 +15,20 @@ export class ControlPanel extends Plugin {
 
     const views = this.folder('תצוגה');
     const orbit = app.plugin('orbit');
-    if (orbit) for (const [k, v] of Object.entries(orbit.views())) views.add({ [v.label]: () => orbit.view(k) }, v.label);
     const walk = app.plugin('walk');
-    if (walk) views.add({ 'הליכה בבית (Esc ליציאה)': () => walk.enter() }, 'הליכה בבית (Esc ליציאה)');
+    // the walking entry is second in the list; it starts in the middle of the living room
+    const entries = orbit ? Object.entries(orbit.views()) : [];
+    entries.forEach(([k, v], i) => {
+      views.add({ [v.label]: () => orbit.view(k) }, v.label);
+      if (i === 0 && walk) views.add({ 'הליכה בבית (Esc ליציאה)': () => walk.enter({ x: 1090, z: 575, yaw: -Math.PI / 2 }) }, 'הליכה בבית (Esc ליציאה)');
+    });
+    if (!entries.length && walk) views.add({ 'הליכה בבית (Esc ליציאה)': () => walk.enter({ x: 1090, z: 575, yaw: -Math.PI / 2 }) }, 'הליכה בבית (Esc ליציאה)');
 
-    const layers = { רהיטים: true, קירות: true, חדרים: true, צללים: true, 'קווי מגרש': true, שלד: false };
+    const layers = { רהיטים: true, אנשים: true, קירות: true, חדרים: true, צללים: true, 'קווי מגרש': true, שלד: false };
     const lf = this.folder('שכבות');
     const setVis = (types, v) => { for (const it of app.items.values()) if (types(it.constructor.type)) it.object.visible = v; };
-    lf.add(layers, 'רהיטים').onChange((v) => setVis((t) => t !== 'wall' && t !== 'room', v));
+    lf.add(layers, 'רהיטים').onChange((v) => setVis((t) => t !== 'wall' && t !== 'room' && t !== 'person', v));
+    lf.add(layers, 'אנשים').onChange((v) => setVis((t) => t === 'person', v));
     lf.add(layers, 'קירות').onChange((v) => setVis((t) => t === 'wall', v));
     lf.add(layers, 'חדרים').onChange((v) => setVis((t) => t === 'room', v));
     lf.add(layers, 'צללים').onChange((v) => { app.sun.castShadow = v; });

@@ -27,3 +27,14 @@
 ## נייר טואלט ומחזיק
 "Toilet Paper + Holder" by Ali107_YT, CC BY 4.0 — https://sketchfab.com/3d-models/toilet-paper-holder-43221ead48364d41977ee4e7ebbfcc04
 (הגיאומטריה פושטה ל-13 אלף משולשים.)
+
+## דלת פנים עם משקוף
+"Interior Door w/ Framing" by RehrigStudios, CC BY 4.0 — https://sketchfab.com/3d-models/interior-door-w-framing-4c91615e64c043c09e34206bd61586ea
+(הכנף הופרדה מהמשקוף כדי שתיפתח בלחיצה.)
+
+## Toilet hang round
+"Toilet hang round" by Ola-Kristian Hoff, from sweethome3d.com/free-3d-models — Free Art License / Creative Commons Attribution 3.0 (לפי הבחירה).
+
+## אדם (עומד / יושב)
+"Cool Man" by ardhanaputra, CC BY 4.0 — https://sketchfab.com/3d-models/cool-man-ad14b71697dd4ea7836c1f06c75e5f72
+(נשארו שתי אנימציות: עמידה וישיבה; המרקמים הוקטנו ל-1024.)

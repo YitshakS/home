@@ -13,6 +13,8 @@ import './items/CrossBrace.js';
 import './items/Vanity.js';
 import './items/Label.js';
 import './items/Light.js';
+import './items/WallHungToilet.js';
+import './items/PersonItem.js';
 import './items/MissingItem.js';
 
 import { OrbitView } from './plugins/OrbitView.js';

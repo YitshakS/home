@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { toCreasedNormals } from 'three/addons/utils/BufferGeometryUtils.js';
 import { Item } from '../core/Item.js';
 import { registry } from '../core/registry.js';
 import { assetText, assetURL } from '../core/assets.js';
@@ -115,7 +116,19 @@ export class ModelItem extends Item {
       .makeScale((d.mirrored ? -1 : 1) * d.width / (size.x || 1), d.height / (size.y || 1), d.depth / (size.z || 1))
       .multiply(new THREE.Matrix4().makeTranslation(-(box.min.x + box.max.x) / 2, -box.min.y, -(box.min.z + box.max.z) / 2));
 
-    // optional hinged part (a toilet lid): meshes named lid* are put in a group that turns about the hinge when clicked (see DoorToggle)
+    // data.hinges = [{names:[group names], pivot:[x,y,z] in the model's own coordinates, axis:'x', angle: degrees}]: the named parts of the model turn about the pivot when clicked
+    const hingeGroups = [];
+    this.hinges = [];
+    for (const h of d.hinges || []) {
+      const grp = new THREE.Group();
+      grp.position.copy(new THREE.Vector3(...h.pivot).applyMatrix4(fit));
+      this.object.add(grp);
+      const hg = { group: grp, names: new Set(h.names), axis: h.axis || 'x', angle: h.angle ?? 90, c: 0, target: 0, isHinge: true };
+      grp.userData.hinge = hg;
+      this.hinges.push(hg);
+      hingeGroups.push(hg);
+    }
+    // optional single hinged part (a toilet lid or a door leaf): meshes named lid* are put in a group that turns about data.lid.pivot when clicked (see DoorToggle)
     let lidGroup = null;
     this.lid = null;
     if (d.lid) {
@@ -128,6 +141,7 @@ export class ModelItem extends Item {
 
     src.traverse((o) => {
       if (!o.isMesh) return;
+      const hg = hingeGroups.find((x) => x.names.has(o.name) || x.names.has(o.parent?.name));
       let g = o.geometry.clone().applyMatrix4(new THREE.Matrix4().multiplyMatrices(fit, o.matrixWorld));
       const mats = (Array.isArray(o.material) ? o.material : [o.material]).map((m) => {
         const ov = d.materials?.[m?.name];
@@ -150,8 +164,11 @@ export class ModelItem extends Item {
       const tm = mats.find((m) => m.userData.texSize);
       // generated SH3D boxes carry no texture coordinates: lay the texture at its real size in cm
       if (tm && !g.attributes.uv) g = boxUV(g, ...tm.userData.texSize);
+      // d.smooth: smooth the shading of rounded parts that the model builds from flat facets
+      if (d.smooth) g = toCreasedNormals(g.index ? g.toNonIndexed() : g, ((d.smooth === true ? 60 : d.smooth) * Math.PI) / 180);
       const mesh = new THREE.Mesh(g, mats.length > 1 ? mats : mats[0]);
-      if (lidGroup && /^lid/.test(o.name)) { mesh.position.copy(lidGroup.position).negate(); lidGroup.add(mesh); }
+      if (hg) { mesh.position.copy(hg.group.position).negate(); hg.group.add(mesh); }
+      else if (lidGroup && /^lid/.test(o.name)) { mesh.position.copy(lidGroup.position).negate(); lidGroup.add(mesh); }
       else this.object.add(mesh);
     });
   }
