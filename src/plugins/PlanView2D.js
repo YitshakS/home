@@ -36,7 +36,13 @@ export class PlanView2D extends Plugin {
     app.on('change', () => this.isOpen && this.draw());
     app.on('select', () => this.isOpen && this.draw());
     const f = app.panel?.folder('תצוגה');
-    if (f) f.add({ 'תוכנית קומה 2D (עריכה ומדידה)': () => this.open() }, 'תוכנית קומה 2D (עריכה ומדידה)');
+    if (f) {
+      // first in the view list (the default view stays the 3D overview, which is second)
+      const c = f.add({ 'תוכנית קומה (שרטוט דו-ממדי)': () => this.open() }, 'תוכנית קומה (שרטוט דו-ממדי)');
+      f.$children.prepend(c.domElement);
+      // choosing any other view leaves the plan, otherwise the change happens hidden behind it
+      f.$children.addEventListener('click', (e) => { if (this.isOpen && !c.domElement.contains(e.target) && e.target.closest('.controller')) this.close(); });
+    }
   }
 
   get isOpen() { return !this.wrap.hidden; }
@@ -57,7 +63,7 @@ export class PlanView2D extends Plugin {
     const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
     const w = this.canvas.clientWidth || innerWidth, h = this.canvas.clientHeight || innerHeight - 44;
     const bw = Math.max(...xs) - Math.min(...xs), bh = Math.max(...ys) - Math.min(...ys);
-    this.scale = Math.min(w / (bw + 200), h / (bh + 200));
+    this.scale = Math.max(0.01, Math.min(w / (bw + 200), h / (bh + 200))); // never zero or negative, even if the window is tiny
     this.ox = w / 2 - ((Math.min(...xs) + Math.max(...xs)) / 2) * this.scale;
     this.oy = h / 2 - ((Math.min(...ys) + Math.max(...ys)) / 2) * this.scale;
     this.draw();
@@ -90,7 +96,7 @@ export class PlanView2D extends Plugin {
 
     poly(app.house.lot.points, '#eef6e8', '#5c8f45', 1.5);
     for (const r of app.rooms) {
-      poly(r.data.points, r.data.floorColor, null);
+      poly(r.data.points, app.floorOverride || r.data.floorColor, null);
       if (!r.data.name) continue;
       const b = r.bounds(), c = this.toScreen([(b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2]);
       const fs = Math.max(9, Math.min(15, S * 22));

@@ -39,6 +39,18 @@ export class ControlPanel extends Plugin {
     }));
     lf.close();
 
+    // floor colour category: shows one colour on every room (view only, the data keeps each room's own colour)
+    const ff = this.folder('צבע רצפה');
+    const FLOORS = ['#CFCFCA', '#D0C8BA', '#D3D3D3', '#D8D4CD', '#EAE6DF', '#EFE8D8']; // by value, small to large; the last is the default (the corridor's)
+    const rooms = () => [...app.items.values()].filter((it) => it.constructor.type === 'room' && !it.data.floorTexture);
+    const paint = (c) => {
+      for (const r of rooms()) r.object.traverse((o) => o.isMesh && o.material.color?.set(c));
+      app.floorOverride = c; // the 2D plan reads it too
+      app.plugin('plan')?.isOpen && app.plugin('plan').draw();
+    };
+    for (const c of FLOORS) { const name = c === FLOORS[FLOORS.length - 1] ? `${c} (ברירת מחדל)` : c; ff.add({ [name]: () => paint(c) }, name); }
+    app.on('loaded', () => paint(FLOORS[FLOORS.length - 1]));
+
     // info box + editable fields of the selected object
     this.info = document.createElement('div');
     this.info.className = 'info-box';

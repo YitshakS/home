@@ -63,7 +63,10 @@ async function main() {
     img.className = 'snap';
     document.getElementById('app').appendChild(img);
     document.title = 'ready';
-  } else app.start();
+  } else {
+    app.start();
+    app.plugin('plan').open(); // the default view is the 2D floor plan, first in the view list
+  }
 }
 
 main().catch((e) => {

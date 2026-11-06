@@ -64,6 +64,28 @@ export class OrbitView extends Plugin {
     };
     el.addEventListener('pointerup', end);
     el.addEventListener('pointercancel', end);
+    // vertical slider, as in walking mode: the camera height (cm); moving it lifts or lowers the camera and its target together.
+    // The scale is squared so that the low heights (a person's eye level) get the finer steps; it is hidden in walking mode and in the 2D plan.
+    const box = (this.heightBox = document.createElement('div'));
+    box.className = 'walk-height';
+    box.hidden = true;
+    box.innerHTML = '<span>גובה מצלמה</span><span class="mx">3000</span><input type="range" min="0" max="1000" step="1" orient="vertical"><span>0</span><b></b>';
+    const slider = box.querySelector('input'), label = box.querySelector('b');
+    const MAXH = 3000, hOf = (v) => Math.max(10, MAXH * (v / 1000) ** 2), vOf = (h) => 1000 * Math.sqrt(Math.min(h, MAXH) / MAXH);
+    let sliding = false;
+    slider.addEventListener('pointerdown', () => { sliding = true; });
+    addEventListener('pointerup', () => { sliding = false; });
+    slider.addEventListener('input', () => {
+      const dy = hOf(+slider.value) - app.camera.position.y;
+      app.camera.position.y += dy; this.controls.target.y += dy;
+    });
+    slider.addEventListener('change', () => slider.blur());
+    document.body.appendChild(box);
+    app.onFrame(() => {
+      const on = this.controls.enabled && !app.plugin('plan')?.isOpen;
+      box.hidden = !on;
+      if (on && !sliding) { slider.value = vOf(app.camera.position.y); label.textContent = Math.round(app.camera.position.y) + ' ס"מ'; }
+    });
     app.onFrame(() => this.controls.enabled && this.controls.update());
     app.on('loaded', () => { if (!this.started) { this.started = true; this.view('overview'); } });
   }
@@ -102,12 +124,12 @@ export class OrbitView extends Plugin {
     const c = this.app.houseCenter();
     return {
       overview: { label: 'מבט כללי', pos: [c.x + 900, 1300, c.z + 1500], target: [c.x, 0, c.z] },
+      wc: { label: 'שירותי אורחים', pos: [1775, 160, 341], target: [1760, 120, 534], walk: { x: 1775, z: 341, yaw: Math.PI } },
       sofas: { label: 'השוואת ספות', pos: [1175, 650, -650], target: [1175, 0, -100] },
       top: { label: 'מלמעלה', pos: [c.x, 2600, c.z + 1], target: [c.x, 0, c.z] },
       kitchen: { label: 'מטבח', pos: [1000, 180, 450], target: [995, 120, 875] },
       living: { label: 'סלון ופינת אוכל', pos: [1450, 150, 310], target: [1810, 105, 490] },
       toilets: { label: 'השוואת אסלות', pos: [1790, 230, -520], target: [1790, 25, -100] },
-      wc: { label: 'שירותי אורחים', pos: [1775, 160, 341], target: [1760, 120, 534], walk: { x: 1775, z: 341, yaw: Math.PI } },
     };
   }
 
