@@ -7070,13 +7070,13 @@
   "type": "model",
   "name": "נייר טואלט",
   "model": "models/3003/toilet-paper-holder.glb",
-  "x": 1825,
+  "x": 1825.25,
   "y": 612,
   "elevation": 68,
   "width": 9.5,
   "depth": 10.7,
   "height": 12.5,
-  "angle": -1.5707963267948966,
+  "angle": 3.141592653589793,
   "group": "שירותי אורחים"
  },
  {
@@ -7294,5 +7294,19 @@
   "sitting": false,
   "group": "שירותי אורחים",
   "toilet": "98af3f94-c029-4b19-9975-a4c1019f3f97"
+ },
+ {
+  "id": "70d809dc-5e42-478a-aab7-c7e29b9a2bad",
+  "type": "model",
+  "name": "מתלה מגבת",
+  "model": "models/3007/towel_rack.glb",
+  "x": 1825.6,
+  "y": 499,
+  "elevation": 76,
+  "width": 8.8,
+  "depth": 60,
+  "height": 47.9,
+  "angle": 3.141592653589793,
+  "group": "נטילה"
  }
 ]

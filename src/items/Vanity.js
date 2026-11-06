@@ -123,15 +123,15 @@ export function buildVanity(W = 110, D = 40) {
   const bowl = new THREE.Mesh(bg, glass); bowl.scale.set(sb, 1, sb); bowl.position.set(0, H + 0.2, bz); bowl.castShadow = true; root.add(bowl);
   const drain = new THREE.Mesh(new THREE.CylinderGeometry(2.1, 2.1, 0.5, 24), new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.4, metalness: 0.6 })); drain.position.set(0, H + 1.4, bz); root.add(drain);
 
-  // bronze pillar faucet like the photo: bulbous banded column, swan-neck spout, lever on top
+  // bronze pillar faucet like the photo: bulbous banded column, swan-neck spout (its end hangs over the middle of the bowl, clear of the glass), lever on top
   const fx = Math.min(30, 25 * sb + 5), fz = -D / 2 + 16, fy = H;
   const colProf = [[0, 0], [3.4, 0], [3.4, 1.3], [2.3, 1.8], [2.0, 3.5], [2.7, 6], [3.1, 8.5], [2.6, 11], [2.0, 13], [2.0, 15], [2.8, 17.5], [2.9, 19.5], [2.1, 21.5], [1.8, 24], [0, 24.2]].map(([r, y]) => new THREE.Vector2(r, y));
   const col = new THREE.Mesh(new THREE.LatheGeometry(colProf, 36), bronze); col.position.set(fx, fy, fz); col.castShadow = true; root.add(col);
   for (const yy of [3.2, 12.4, 21.2]) { const b = new THREE.Mesh(new THREE.TorusGeometry(2.25, 0.3, 10, 28), bronzeBand); b.rotation.x = Math.PI / 2; b.position.set(fx, fy + yy, fz); root.add(b); }
-  const curve = new THREE.CatmullRomCurve3([[fx, fy + 17.5, fz], [fx - 3.5, fy + 18.2, fz + 0.3], [fx - 8, fy + 20, fz + 1.4], [fx - 12, fy + 19.5, fz + 3], [fx - 14, fy + 16.5, fz + 4], [fx - 14.4, fy + 13.5, fz + 4.2]].map((p) => new THREE.Vector3(...p)));
+  const curve = new THREE.CatmullRomCurve3([[fx, fy + 17.5, fz], [fx - 3.5, fy + 18.2, fz + 0.3], [fx - 8, fy + 20.5, fz + 2.6], [fx - 12, fy + 20.2, fz + 6], [fx - 14, fy + 18.5, fz + 8.6], [fx - 14.4, fy + 16.4, fz + 9.8]].map((p) => new THREE.Vector3(...p)));
   const neck = new THREE.Mesh(new THREE.TubeGeometry(curve, 48, 1.3, 14), bronze); neck.castShadow = true; root.add(neck);
-  const lip = new THREE.Mesh(new THREE.CylinderGeometry(1.7, 1.5, 2.2, 18), bronze); lip.position.set(fx - 14.4, fy + 13, fz + 4.2); root.add(lip);
-  const lipBand = new THREE.Mesh(new THREE.TorusGeometry(1.6, 0.22, 8, 20), bronzeBand); lipBand.rotation.x = Math.PI / 2; lipBand.position.set(fx - 14.4, fy + 13.9, fz + 4.2); root.add(lipBand);
+  const lip = new THREE.Mesh(new THREE.CylinderGeometry(1.7, 1.5, 2.2, 18), bronze); lip.position.set(fx - 14.4, fy + 15.9, fz + 9.8); root.add(lip);
+  const lipBand = new THREE.Mesh(new THREE.TorusGeometry(1.6, 0.22, 8, 20), bronzeBand); lipBand.rotation.x = Math.PI / 2; lipBand.position.set(fx - 14.4, fy + 16.8, fz + 9.8); root.add(lipBand);
   const ld = fx + 9.4 + 1.5 > W / 2 + 2 ? -1 : 1;                 // on a narrow cabinet the lever points over the bowl instead of hanging over the edge of the top
   const lever = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 0.8, 11, 14), bronze); lever.rotation.z = -1.1 * ld; lever.position.set(fx + 4.2 * ld, fy + 26.2, fz); root.add(lever);
   const boss = new THREE.Mesh(new THREE.SphereGeometry(2.1, 18, 14), bronze); boss.position.set(fx, fy + 24.6, fz); boss.castShadow = true; root.add(boss);   // pivot knob that joins the lever to the top of the column

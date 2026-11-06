@@ -38,3 +38,7 @@
 ## אדם (עומד / יושב)
 "Cool Man" by ardhanaputra, CC BY 4.0 — https://sketchfab.com/3d-models/cool-man-ad14b71697dd4ea7836c1f06c75e5f72
 (נשארו שתי אנימציות: עמידה וישיבה; המרקמים הוקטנו ל-1024.)
+
+## מתלה מגבת
+"Towel Rack" by Helindu, CC BY 4.0 — https://sketchfab.com/3d-models/towel-rack-443cbd8613974aee94095d95d58650ef
+(הגיאומטריה פושטה מכ-939 אלף ל-28 אלף משולשים, והמרקמים הוקטנו ל-1024.)
