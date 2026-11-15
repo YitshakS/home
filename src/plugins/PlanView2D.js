@@ -110,6 +110,17 @@ export class PlanView2D extends Plugin {
     }
     for (const w of app.walls) poly(w.footprint(), '#3c3f42', null);
     for (const w of app.walls) this.drawOpenings(ctx, w);
+    // door swing drawn for doors that are not wall openings (data.swingMark = {hinge:[x,y], r, from, to} in plan cm / radians)
+    for (const it of app.furniture) {
+      const m = it.data.swingMark;
+      if (!m) continue;
+      const [hx, hy] = this.toScreen(m.hinge), r = m.r * this.scale;
+      ctx.strokeStyle = '#7d8790'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(hx + r * Math.cos(m.from), hy + r * Math.sin(m.from));
+      ctx.moveTo(hx, hy); ctx.lineTo(hx + r * Math.cos(m.to), hy + r * Math.sin(m.to));
+      ctx.moveTo(hx + r * Math.cos(m.from), hy + r * Math.sin(m.from));
+      ctx.arc(hx, hy, r, m.from, m.to); ctx.stroke();
+    }
     for (const d of app.house.dimensions || []) this.drawDimension(ctx, d.start, d.end, d.offset, '#3b6ea8');
 
     const sel = app.selected;
