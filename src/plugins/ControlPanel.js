@@ -10,6 +10,7 @@ export class ControlPanel extends Plugin {
     const app = this.app;
     app.panel = this;
     this.gui = new GUI({ title: 'הבית', width: 300 });
+    this.gui.close(); // the panel starts collapsed
     this.gui.domElement.classList.add('rtl-gui');
     this.folders = new Map();
 

@@ -110,6 +110,15 @@ export class PlanView2D extends Plugin {
     }
     for (const w of app.walls) poly(w.footprint(), '#3c3f42', null);
     for (const w of app.walls) this.drawOpenings(ctx, w);
+    // items with data.planColor are drawn as a filled footprint in the plan only (3D keeps the item's own color)
+    for (const it of app.furniture) {
+      const c = it.data.planColor;
+      if (!c) continue;
+      const [px, py] = this.toScreen([it.data.x, it.data.y]);
+      const w = it.data.width * this.scale, h = it.data.depth * this.scale;
+      ctx.save(); ctx.translate(px, py); ctx.rotate(it.data.angle || 0);
+      ctx.fillStyle = c; ctx.fillRect(-w / 2, -h / 2, w, h); ctx.restore();
+    }
     // door swing drawn for doors that are not wall openings (data.swingMark = {hinge:[x,y], r, from, to} in plan cm / radians)
     for (const it of app.furniture) {
       const m = it.data.swingMark;
