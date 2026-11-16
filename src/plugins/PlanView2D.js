@@ -117,7 +117,8 @@ export class PlanView2D extends Plugin {
       const [px, py] = this.toScreen([it.data.x, it.data.y]);
       const w = it.data.width * this.scale, h = it.data.depth * this.scale;
       ctx.save(); ctx.translate(px, py); ctx.rotate(it.data.angle || 0);
-      ctx.fillStyle = c; ctx.fillRect(-w / 2, -h / 2, w, h); ctx.restore();
+      if (it.data.planOutline) { ctx.strokeStyle = c; ctx.lineWidth = 3; ctx.strokeRect(-w / 2, -h / 2, w, h); } else { ctx.fillStyle = c; ctx.fillRect(-w / 2, -h / 2, w, h); }
+      ctx.restore();
     }
     // door swing drawn for doors that are not wall openings (data.swingMark = {hinge:[x,y], r, from, to} in plan cm / radians)
     for (const it of app.furniture) {

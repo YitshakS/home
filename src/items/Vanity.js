@@ -171,7 +171,7 @@ function mirrorFilm() {
 export function buildMirror(width = 110) {
   const grp = new THREE.Group();
   const mh = new THREE.MeshStandardMaterial({ map: weathered(false), roughness: 0.92 }), mv = new THREE.MeshStandardMaterial({ map: weathered(true), roughness: 0.92 });
-  const W2 = Math.min(100, width - 6), Hh = 64, bt = 8.5, bs = 7, d = 3.6, cy = 165;               // overall width / height, board sizes (cm)
+  const W2 = width - 6, Hh = 64, bt = 8.5, bs = 7, d = 3.6, cy = 165;               // overall width / height, board sizes (cm)
   const glass = new THREE.Mesh(new THREE.BoxGeometry(W2 - 2 * bs + 1, Hh - 2 * bt + 1, 0.6), new THREE.MeshStandardMaterial({ color: 0xcfdadd, metalness: 0.2, roughness: 0.08 })); glass.position.set(0, cy, -0.8); grp.add(glass);
   // a real reflection of the room (the scene is drawn again from the other side of the mirror); shown only when the camera is near and in front of it (see Vanity.build)
   const refl = new Reflector(new THREE.PlaneGeometry(W2 - 2 * bs + 0.6, Hh - 2 * bt + 0.6), { color: 0x808080, textureWidth: 768, textureHeight: 768, clipBias: 0.003 });
