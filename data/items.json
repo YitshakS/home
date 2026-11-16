@@ -7427,5 +7427,18 @@
   "angle": 0,
   "color": "#ece9e2",
   "group": "שירותי אורחים"
+ },
+ {
+  "id": "f54a3839-ab2f-487e-b913-1565d30e2136",
+  "type": "plaque",
+  "name": "חריטה - אם אשכחך ירושלים",
+  "x": 1066,
+  "y": 275.2,
+  "elevation": 136,
+  "angle": 0,
+  "width": 48,
+  "height": 48,
+  "depth": 0.4,
+  "image": "textures/plaque.jpg"
  }
 ]
