@@ -12,6 +12,7 @@ import './items/Countertop.js';
 import './items/CrossBrace.js';
 import './items/Vanity.js';
 import './items/Plaque.js';
+import './items/Armchair.js';
 import './items/Label.js';
 import './items/Light.js';
 import './items/WallHungToilet.js';

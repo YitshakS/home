@@ -7440,5 +7440,18 @@
   "height": 48,
   "depth": 0.4,
   "image": "textures/plaque.jpg"
+ },
+ {
+  "id": "fc448df6-3f43-4a1a-9776-4da0386694d2",
+  "type": "armchair",
+  "name": "כורסה",
+  "x": 1640,
+  "y": 400,
+  "elevation": 0,
+  "angle": 1.5707963,
+  "width": 131,
+  "depth": 98,
+  "height": 112,
+  "group": "ספה"
  }
 ]
