@@ -110,6 +110,17 @@ export class PlanView2D extends Plugin {
     }
     for (const w of app.walls) poly(w.footprint(), '#3c3f42', null);
     for (const w of app.walls) this.drawOpenings(ctx, w);
+    // options (data.house.options = [{name, points}]): rooms that are only a possibility, drawn dashed in the plan and not built
+    for (const o of app.house.options || []) {
+      ctx.save(); ctx.setLineDash([10, 7]);
+      poly(o.points, null, '#b06a1a', 2); ctx.restore();
+      const xs = o.points.map((q) => q[0]), ys = o.points.map((q) => q[1]);
+      const c = this.toScreen([(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...ys) + Math.max(...ys)) / 2]);
+      const fs = Math.max(9, Math.min(14, S * 20));
+      text(o.name, [c[0], c[1] - fs * 0.6], fs, '#8a4f12', true);
+      text(`${(Math.max(...xs) - Math.min(...xs)).toFixed(0)} × ${(Math.max(...ys) - Math.min(...ys)).toFixed(0)}`, [c[0], c[1] + fs * 0.8], fs * 0.85, '#8a4f12', false, 'ltr');
+    }
+
     // items with data.planColor are drawn as a filled footprint in the plan only (3D keeps the item's own color)
     for (const it of app.furniture) {
       const c = it.data.planColor;
