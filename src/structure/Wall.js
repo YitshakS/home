@@ -68,7 +68,9 @@ export class Wall extends Item {
       const across = Math.abs(-(o.x - x0) * dy + (o.y - y0) * dx);
       const parallel = Math.abs(Math.sin((o.angle || 0) - Math.atan2(dy, dx))) < 0.05;
       if (!parallel || across > t / 2 + 6 || along < -1 || along > L + 1) continue;
-      out.push({ from: along - o.width / 2, to: along + o.width / 2, bottom: o.elevation || 0, top: (o.elevation || 0) + o.height, door: /door|דלת/i.test(o.name || '') });
+      // data.opening may name the hole itself ({width, height, bottom}) when the model is larger than the window (curtains, rod)
+      const ow = o.opening.width ?? o.width, oh = o.opening.height ?? o.height, ob = o.opening.bottom ?? (o.elevation || 0);
+      out.push({ from: along - ow / 2, to: along + ow / 2, bottom: ob, top: ob + oh, door: /door|דלת/i.test(o.name || '') });
     }
     return out.sort((a, b) => a.from - b.from);
   }

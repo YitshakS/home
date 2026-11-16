@@ -42,3 +42,7 @@
 ## מתלה מגבת
 "Towel Rack" by Helindu, CC BY 4.0 — https://sketchfab.com/3d-models/towel-rack-443cbd8613974aee94095d95d58650ef
 (הגיאומטריה פושטה מכ-939 אלף ל-28 אלף משולשים, והמרקמים הוקטנו ל-1024.)
+
+## חלון עם וילון (מטבח)
+"Window_Curtain" by Nelesh_surve, CC BY 4.0 — https://sketchfab.com/3d-models/window-curtain-229d686ed3c348808432d9093621eefd
+(פיסת הקיר שבדגם הוסרה, והדגם סובב 90 מעלות; מרקמים 1024.)
