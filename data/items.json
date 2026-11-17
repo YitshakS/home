@@ -6033,7 +6033,7 @@
   "type": "vanity",
   "name": "ארון נטילה עם מראה",
   "x": 1847.5,
-  "y": 556,
+  "y": 531,
   "elevation": 0,
   "angle": 1.5707963267948966,
   "width": 120,
@@ -7042,7 +7042,7 @@
   "name": "מתלה מגבת",
   "model": "models/3007/towel_rack.glb",
   "x": 1865.6,
-  "y": 651,
+  "y": 626,
   "elevation": 76,
   "width": 8.8,
   "depth": 60,
@@ -7255,7 +7255,7 @@
   "name": "דלת כניסה (Embellished 2)",
   "model": "models/3020/embellished-front-door-2-notrim.glb",
   "x": 1883,
-  "y": 383,
+  "y": 363,
   "elevation": 0,
   "width": 159.3,
   "depth": 13.7,
@@ -7271,6 +7271,12 @@
    "wallThickness": 1,
    "wallDistance": 0,
    "bothSides": true
+  },
+  "leaf": {
+   "x0": -53.1,
+   "x1": 53.1,
+   "hinge": -1,
+   "angle": -90
   }
  }
 ]

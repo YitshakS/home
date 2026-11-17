@@ -148,6 +148,18 @@ export class ModelItem extends Item {
       this.lid = { group: lidGroup, t: 0, target: 0 };
     }
 
+    // data.leaf = {x0, x1, hinge: -1|1, angle}: the part of the model between x0 and x1 (cm, the item's own x axis) is a door leaf that turns about the vertical axis
+    // at its hinge edge when clicked; everything outside (frame, side lights) stays
+    let leafGroup = null;
+    if (d.leaf) {
+      leafGroup = new THREE.Group();
+      leafGroup.position.set(d.leaf.hinge < 0 ? d.leaf.x0 : d.leaf.x1, 0, 0);
+      this.object.add(leafGroup);
+      const hg = { group: leafGroup, axis: 'y', angle: d.leaf.angle ?? -90, c: 0, target: 0, isHinge: true };
+      leafGroup.userData.hinge = hg;
+      this.hinges.push(hg);
+    }
+
     src.traverse((o) => {
       if (!o.isMesh) return;
       const hg = hingeGroups.find((x) => x.names.has(o.name) || x.names.has(o.parent?.name));
@@ -177,12 +189,55 @@ export class ModelItem extends Item {
       if (tm && !g.attributes.uv) g = boxUV(g, ...tm.userData.texSize);
       // d.smooth: smooth the shading of rounded parts that the model builds from flat facets
       if (d.smooth) g = toCreasedNormals(g.index ? g.toNonIndexed() : g, ((d.smooth === true ? 60 : d.smooth) * Math.PI) / 180);
+      if (leafGroup) {
+        const sp = splitRange(g, d.leaf.x0, d.leaf.x1);
+        g = sp.outside;
+        if (sp.inside.attributes.position.count) {
+          const lm = new THREE.Mesh(sp.inside, mats.length > 1 ? mats : mats[0]);
+          lm.position.copy(leafGroup.position).negate();
+          leafGroup.add(lm);
+        }
+      }
       const mesh = new THREE.Mesh(g, mats.length > 1 ? mats : mats[0]);
       if (hg) { mesh.position.copy(hg.group.position).negate(); hg.group.add(mesh); }
       else if (lidGroup && /^lid/.test(o.name)) { mesh.position.copy(lidGroup.position).negate(); lidGroup.add(mesh); }
       else this.object.add(mesh);
     });
   }
+}
+// cut a geometry (item space, cm) with the planes x = x0 and x = x1: returns {inside, outside}; triangles that cross a plane are split (Sutherland-Hodgman),
+// so a door leaf can be turned on its own although the model builds it together with the frame and the side lights
+function splitRange(g, x0, x1) {
+  const src = g.index ? g.toNonIndexed() : g;
+  const pos = src.attributes.position, nor = src.attributes.normal, uv = src.attributes.uv;
+  const vert = (i) => ({ p: [pos.getX(i), pos.getY(i), pos.getZ(i)], n: nor ? [nor.getX(i), nor.getY(i), nor.getZ(i)] : [0, 1, 0], u: uv ? [uv.getX(i), uv.getY(i)] : [0, 0] });
+  const lerp = (a, b, t) => a.map((v, k) => v + (b[k] - v) * t);
+  const clip = (poly, at, keepHigh) => {
+    const out = [], inside = (v) => (keepHigh ? v.p[0] >= at : v.p[0] <= at);
+    for (let k = 0; k < poly.length; k++) {
+      const c = poly[k], e = poly[(k + 1) % poly.length], ci = inside(c), ei = inside(e);
+      if (ci) out.push(c);
+      if (ci !== ei) { const t = (at - c.p[0]) / (e.p[0] - c.p[0]); out.push({ p: lerp(c.p, e.p, t), n: lerp(c.n, e.n, t), u: lerp(c.u, e.u, t) }); }
+    }
+    return out;
+  };
+  const A = { P: [], N: [], U: [] }, B = { P: [], N: [], U: [] };
+  const emit = (poly, o) => {
+    for (let k = 1; k + 1 < poly.length; k++) for (const v of [poly[0], poly[k], poly[k + 1]]) { o.P.push(...v.p); o.N.push(...v.n); o.U.push(...v.u); }
+  };
+  for (let t = 0; t < pos.count; t += 3) {
+    const tri = [vert(t), vert(t + 1), vert(t + 2)];
+    emit(clip(clip(tri, x0, true), x1, false), A);                 // between the planes
+    emit(clip(tri, x0, false), B); emit(clip(tri, x1, true), B);   // left of x0 and right of x1
+  }
+  const make = (o) => {
+    const q = new THREE.BufferGeometry();
+    q.setAttribute('position', new THREE.Float32BufferAttribute(o.P, 3));
+    q.setAttribute('normal', new THREE.Float32BufferAttribute(o.N, 3));
+    q.setAttribute('uv', new THREE.Float32BufferAttribute(o.U, 2));
+    return q;
+  };
+  return { inside: make(A), outside: make(B) };
 }
 // swap two vertices of every triangle (after a mirror the faces are wound the wrong way round)
 function flipWinding(g) {
