@@ -126,7 +126,7 @@ export class PlanView2D extends Plugin {
         ctx.setLineDash([]); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(hx + r * Math.cos(k.swing.to), hy + r * Math.sin(k.swing.to)); ctx.stroke(); ctx.restore();
       } else if (k.line) {
         const [a0, b0] = this.toScreen(k.line[0]), [a1, b1] = this.toScreen(k.line[1]);
-        ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = k.thick ? k.thick * S : 4; ctx.lineCap = k.thick ? 'butt' : 'round'; ctx.beginPath(); ctx.moveTo(a0, b0); ctx.lineTo(a1, b1); ctx.stroke(); ctx.restore();
+        ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = k.thick ? k.thick * S : 4; ctx.lineCap = k.thick ? 'butt' : 'round'; if (k.dash) ctx.setLineDash([7, 5]); ctx.beginPath(); ctx.moveTo(a0, b0); ctx.lineTo(a1, b1); ctx.stroke(); ctx.restore();
         if (k.label) text(k.label, [(a0 + a1) / 2 + (k.dx || 0), (b0 + b1) / 2 + (k.dy ?? 12)], fs, col, true);
       }
     }
