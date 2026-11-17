@@ -1,25 +1,5 @@
 [
  {
-  "id": "42052064-754f-4d72-a875-262e7946b4d6",
-  "type": "model",
-  "name": "Front door",
-  "model": "models/3/model.obj",
-  "x": 1876.5277,
-  "y": 341,
-  "elevation": 0,
-  "width": 101.5,
-  "depth": 31.945194,
-  "height": 208.5,
-  "angle": 1.5707964,
-  "opening": {
-   "wallThickness": 0.7826087,
-   "wallDistance": 0,
-   "bothSides": true
-  },
-  "hinge": -1,
-  "swing": 1
- },
- {
   "id": "763b0947-2f28-46dd-a8a4-dd0384e234c1",
   "type": "model",
   "name": "Double window",
@@ -6053,7 +6033,7 @@
   "type": "vanity",
   "name": "ארון נטילה עם מראה",
   "x": 1847.5,
-  "y": 470,
+  "y": 556,
   "elevation": 0,
   "angle": 1.5707963267948966,
   "width": 120,
@@ -7062,7 +7042,7 @@
   "name": "מתלה מגבת",
   "model": "models/3007/towel_rack.glb",
   "x": 1865.6,
-  "y": 565,
+  "y": 651,
   "elevation": 76,
   "width": 8.8,
   "depth": 60,
@@ -7272,20 +7252,25 @@
  {
   "id": "ff2af942-f6e7-42ac-94ce-1547a307f8c6",
   "type": "model",
-  "name": "דלת חדשה (Embellished 2)",
-  "model": "models/3020/embellished-front-door-2.glb",
-  "x": 2010,
-  "y": 341,
+  "name": "דלת כניסה (Embellished 2)",
+  "model": "models/3020/embellished-front-door-2-notrim.glb",
+  "x": 1883,
+  "y": 383,
   "elevation": 0,
-  "width": 176.4,
-  "depth": 20,
-  "height": 208.5,
+  "width": 159.3,
+  "depth": 13.7,
+  "height": 207.2,
   "angle": 1.5707964,
   "group": "דלת חדשה",
   "materials": {
    "color_de_puertas__ventanas_y_ms": {
     "color": "#173343"
    }
+  },
+  "opening": {
+   "wallThickness": 1,
+   "wallDistance": 0,
+   "bothSides": true
   }
  }
 ]
