@@ -7268,5 +7268,24 @@
   "depth": 98,
   "height": 112,
   "group": "ספה"
+ },
+ {
+  "id": "ff2af942-f6e7-42ac-94ce-1547a307f8c6",
+  "type": "model",
+  "name": "דלת חדשה (Embellished 2)",
+  "model": "models/3020/embellished-front-door-2.glb",
+  "x": 2010,
+  "y": 341,
+  "elevation": 0,
+  "width": 176.4,
+  "depth": 20,
+  "height": 208.5,
+  "angle": 1.5707964,
+  "group": "דלת חדשה",
+  "materials": {
+   "color_de_puertas__ventanas_y_ms": {
+    "color": "#173343"
+   }
+  }
  }
 ]

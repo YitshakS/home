@@ -46,3 +46,6 @@
 ## חלון עם וילון (מטבח)
 "Window_Curtain" by Nelesh_surve, CC BY 4.0 — https://sketchfab.com/3d-models/window-curtain-229d686ed3c348808432d9093621eefd
 (פיסת הקיר שבדגם הוסרה, והדגם סובב 90 מעלות; מרקמים 1024.)
+
+## דלת כניסה (חדשה)
+"Embellished front door 2" by anDDDres, CC BY 4.0 — https://sketchfab.com/3d-models/embellished-front-door-2-524fb36768e54ed8b3ac8722843b54ff
