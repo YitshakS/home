@@ -110,6 +110,34 @@ export class PlanView2D extends Plugin {
     }
     for (const w of app.walls) poly(w.footprint(), '#3c3f42', null);
     for (const w of app.walls) this.drawOpenings(ctx, w);
+    // sketch (data.house.sketch = [{rect:[x0,y0,x1,y1], label, color} | {line:[[x,y],[x,y]], label, color}]): a proposal drawn over the plan, not built
+    for (const k of app.house.sketch || []) {
+      const col = k.color || '#8d99a6';
+      const fs = Math.max(7, Math.min(11, S * 15));
+      if (k.rect) {
+        const [a0, b0] = this.toScreen([k.rect[0], k.rect[1]]), [a1, b1] = this.toScreen([k.rect[2], k.rect[3]]);
+        ctx.save(); ctx.globalAlpha = 0.55; ctx.fillStyle = col; ctx.fillRect(a0, b0, a1 - a0, b1 - b0); ctx.globalAlpha = 1;
+        ctx.strokeStyle = '#4b5560'; ctx.lineWidth = 1; ctx.strokeRect(a0, b0, a1 - a0, b1 - b0); ctx.restore();
+        if (k.label) text(k.label, [(a0 + a1) / 2, (b0 + b1) / 2], fs, '#1d2b36', false);
+      } else if (k.swing) {
+        const [hx, hy] = this.toScreen(k.swing.hinge), r = k.swing.r * S;
+        ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 1.2; ctx.setLineDash([4, 3]);
+        ctx.beginPath(); ctx.moveTo(hx + r * Math.cos(k.swing.from), hy + r * Math.sin(k.swing.from)); ctx.arc(hx, hy, r, k.swing.from, k.swing.to); ctx.stroke();
+        ctx.setLineDash([]); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(hx + r * Math.cos(k.swing.to), hy + r * Math.sin(k.swing.to)); ctx.stroke(); ctx.restore();
+      } else if (k.line) {
+        const [a0, b0] = this.toScreen(k.line[0]), [a1, b1] = this.toScreen(k.line[1]);
+        ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = k.thick ? k.thick * S : 4; ctx.lineCap = k.thick ? 'butt' : 'round'; ctx.beginPath(); ctx.moveTo(a0, b0); ctx.lineTo(a1, b1); ctx.stroke(); ctx.restore();
+        if (k.label) text(k.label, [(a0 + a1) / 2 + (k.dx || 0), (b0 + b1) / 2 + (k.dy ?? 12)], fs, col, true);
+      }
+    }
+    // marks (data.house.marks = [{label, from:[x,y], to:[x,y], color}]): a thick coloured line with a label, e.g. a planned entrance
+    for (const m of app.house.marks || []) {
+      const [x0, y0] = this.toScreen(m.from), [x1, y1] = this.toScreen(m.to);
+      ctx.save(); ctx.strokeStyle = m.color || '#e02020'; ctx.lineWidth = 5; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke(); ctx.restore();
+      text(m.label, [(x0 + x1) / 2, m.labelAbove ? Math.min(y0, y1) - 14 : Math.max(y0, y1) + 14], Math.max(10, Math.min(13, S * 18)), m.color || '#e02020', true);
+    }
+
     // options (data.house.options = [{name, points}]): rooms that are only a possibility, drawn dashed in the plan and not built
     for (const o of app.house.options || []) {
       ctx.save(); ctx.setLineDash([10, 7]);
