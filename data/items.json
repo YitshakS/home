@@ -7042,13 +7042,17 @@
   "name": "מתלה מגבת",
   "model": "models/3007/towel_rack.glb",
   "x": 1865.6,
-  "y": 626,
+  "y": 616,
   "elevation": 76,
   "width": 8.8,
   "depth": 60,
   "height": 47.9,
   "angle": 3.141592653589793,
-  "group": "נטילה"
+  "group": "נטילה",
+  "squeeze": {
+   "by": 20,
+   "keep": 8
+  }
  },
  {
   "id": "e14712c7-3444-47b2-9825-1b5399590f65",

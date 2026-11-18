@@ -124,6 +124,13 @@ export class ModelItem extends Item {
       const ei = d.frame.jambEdge * Math.abs(d.width / (size.x || 1)), eo = Math.abs(d.width) / 2, pi = d.frame.passage / 2;
       fmap = (x) => { const a = Math.abs(x), r = a <= ei ? (a * pi) / ei : a <= eo ? pi + ((a - ei) * (eo - pi)) / (eo - ei) : a; return x < 0 ? -r : r; };
     }
+    // data.squeeze = {by, keep}: the model is built at its full depth, then made `by` cm shorter along its depth axis by compressing only the middle;
+    // the outer `keep` cm at each end (brackets, end caps) keep their real size, so a towel rail gets shorter without squashing its fixings
+    let zmap = null;
+    if (d.squeeze) {
+      const hz = d.depth / 2, m = hz - d.squeeze.keep, f = (2 * m - d.squeeze.by) / (2 * m);
+      zmap = (z) => { const a = Math.abs(z), r = a <= m ? a * f : m * f + (a - m); return z < 0 ? -r : r; };
+    }
     // data.hinges = [{names:[group names], pivot:[x,y,z] in the model's own coordinates, axis:'x', angle: degrees}]: the named parts of the model turn about the pivot when clicked
     const hingeGroups = [];
     this.hinges = [];
@@ -167,6 +174,7 @@ export class ModelItem extends Item {
       // mirroring (negative x scale) turns every triangle inside out: restore the winding so the front faces stay front
       if (d.mirrored) g = flipWinding(g);
       if (fmap) { const px = g.attributes.position; for (let i = 0; i < px.count; i++) px.setX(i, fmap(px.getX(i))); px.needsUpdate = true; g.computeBoundingBox(); g.computeBoundingSphere(); }
+      if (zmap) { const px = g.attributes.position; for (let i = 0; i < px.count; i++) px.setZ(i, zmap(px.getZ(i))); px.needsUpdate = true; g.computeBoundingBox(); g.computeBoundingSphere(); }
       const mats = (Array.isArray(o.material) ? o.material : [o.material]).map((m) => {
         const ov = d.materials?.[m?.name];
         // glTF models keep their own materials (gloss, metal, normal maps) unless shininess is set; OBJ models are made matte
