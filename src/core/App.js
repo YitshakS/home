@@ -33,6 +33,21 @@ export class App extends EventTarget {
     const pm = new THREE.PMREMGenerator(r);
     this.scene.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture;
     this.scene.environmentIntensity = 0.35;
+    // what glossy glTF parts of items with data.gloss reflect (chrome, lamp reflectors, car paint): a bright sky over a sandy ground with a sun spot,
+    // like a model viewer's studio. Only those items use it (see ModelItem), so the soft light of the house and every other model stays as it is
+    const sky = new THREE.Scene();
+    sky.add(new THREE.Mesh(new THREE.SphereGeometry(50, 48, 24), new THREE.ShaderMaterial({
+      side: THREE.BackSide,
+      vertexShader: 'varying vec3 p; void main(){ p = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.); }',
+      fragmentShader: `varying vec3 p; void main(){
+        float h = p.y;
+        vec3 up = mix(vec3(.85,.88,.92), vec3(.22,.45,.85), smoothstep(0., .7, h));
+        vec3 down = mix(vec3(.85,.66,.42), vec3(.22,.15,.10), smoothstep(0., -.5, h));
+        vec3 c = h > 0. ? up : down;
+        c += smoothstep(.96, .995, dot(p, normalize(vec3(-.5,.6,.6)))) * vec3(6., 5.5, 4.5);
+        gl_FragColor = vec4(c, 1.); }`,
+    })));
+    this.glossEnv = pm.fromScene(sky, 0.02).texture;
 
     window.addEventListener('resize', () => this.resize());
     this.resize();

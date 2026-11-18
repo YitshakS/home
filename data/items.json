@@ -7278,5 +7278,20 @@
    "hinge": -1,
    "angle": -90
   }
+ },
+ {
+  "id": "903dfa11-bdc7-4f20-9600-28af020c46b6",
+  "type": "model",
+  "name": "טויוטה קורולה",
+  "model": "models/3008/corolla.glb",
+  "x": 2380,
+  "y": 363,
+  "elevation": 0,
+  "width": 217,
+  "depth": 462,
+  "height": 147,
+  "angle": 3.141592653589793,
+  "gloss": true,
+  "group": "רכב"
  }
 ]

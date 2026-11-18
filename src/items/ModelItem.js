@@ -172,6 +172,13 @@ export class ModelItem extends Item {
         // glTF models keep their own materials (gloss, metal, normal maps) unless shininess is set; OBJ models are made matte
         const s = glb && m?.isMeshStandardMaterial ? m.clone() : toStandard(m, ov || (d.shininess !== undefined ? { shininess: d.shininess } : undefined));
         if (glb && m?.isMeshStandardMaterial && d.shininess !== undefined) s.roughness = 0.85 - d.shininess * 0.75;
+        // d.gloss: glossy / metallic parts of this glTF model (chrome, lamp reflectors, car paint) reflect a brighter sky-and-ground environment
+        // than the house's soft one, so they read like in a model viewer instead of flat grey
+        if (d.gloss && glb && s.isMeshStandardMaterial && (s.metalness > 0.3 || s.roughness < 0.4) && this.app.glossEnv) {
+          s.envMap = this.app.glossEnv;
+          // clear glass over a lamp: its alpha also dims the reflection on it, so give it more to keep the shine
+          s.envMapIntensity = s.transparent ? Math.min(4, 1.3 / Math.max(0.15, s.opacity)) : 1.3;
+        }
         if (d.color) { s.color.set(d.color); s.map = null; }
         if (ov?.color) { s.color.set(ov.color); s.map = null; }
         const tex = ov?.texture || d.texture;

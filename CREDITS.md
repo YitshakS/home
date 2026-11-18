@@ -49,3 +49,8 @@
 
 ## דלת כניסה (חדשה)
 "Embellished front door 2" by anDDDres, CC BY 4.0 — https://sketchfab.com/3d-models/embellished-front-door-2-524fb36768e54ed8b3ac8722843b54ff
+
+
+## טויוטה קורולה
+"2014 Toyota Corolla E180 EU (with interior)" by Armored Wave, CC BY 4.0 — https://sketchfab.com/3d-models/2014-toyota-corolla-e180-eu-with-interior-36f95efb0585464cae43a25a3b3392e8
+(המרקמים הוקטנו ל-1024 והומרו ל-WebP, ונוספה מדבקה דהויה על מכסה המנוע. הקובץ: assets/models/3008/corolla.glb.)
