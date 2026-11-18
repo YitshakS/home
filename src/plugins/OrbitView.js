@@ -70,6 +70,7 @@ export class OrbitView extends Plugin {
     box.className = 'walk-height';
     box.hidden = true;
     box.innerHTML = '<span>גובה מצלמה</span><span class="mx">3000</span><input type="range" min="0" max="1000" step="1" orient="vertical"><span>0</span><b></b>';
+    box.firstElementChild.addEventListener('click', () => box.classList.toggle('collapsed')); // the title folds the box
     const slider = box.querySelector('input'), label = box.querySelector('b');
     const MAXH = 3000, hOf = (v) => Math.max(10, MAXH * (v / 1000) ** 2), vOf = (h) => 1000 * Math.sqrt(Math.min(h, MAXH) / MAXH);
     let sliding = false;

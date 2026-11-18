@@ -9,7 +9,7 @@ export class ControlPanel extends Plugin {
   install() {
     const app = this.app;
     app.panel = this;
-    this.gui = new GUI({ title: 'הבית', width: 300 });
+    this.gui = new GUI({ title: 'הבית', width: 200 });
     this.gui.close(); // the panel starts collapsed
     this.gui.domElement.classList.add('rtl-gui');
     this.folders = new Map();
@@ -27,6 +27,7 @@ export class ControlPanel extends Plugin {
 
     const layers = { רהיטים: true, אנשים: true, קירות: true, חדרים: true, צללים: true, 'קווי מגרש': true, שלד: false };
     const lf = this.folder('שכבות');
+    lf.domElement.classList.add('two-col');
     const setVis = (types, v) => { for (const it of app.items.values()) if (types(it.constructor.type)) it.object.visible = v; };
     lf.add(layers, 'רהיטים').onChange((v) => setVis((t) => t !== 'wall' && t !== 'room' && t !== 'person', v));
     lf.add(layers, 'אנשים').onChange((v) => setVis((t) => t === 'person', v));
@@ -42,6 +43,8 @@ export class ControlPanel extends Plugin {
 
     // floor colour category: shows one colour on every room (view only, the data keeps each room's own colour)
     const ff = this.folder('צבע רצפה');
+    ff.domElement.classList.add('two-col');
+    ff.domElement.classList.add('radio-folder');
     const FLOORS = ['#CFCFCA', '#D0C8BA', '#D3D3D3', '#D8D4CD', '#EAE6DF', '#EFE8D8']; // by value, small to large; the last is the default (the corridor's)
     const rooms = () => [...app.items.values()].filter((it) => it.constructor.type === 'room' && !it.data.floorTexture);
     const paint = (c) => {
@@ -49,7 +52,19 @@ export class ControlPanel extends Plugin {
       app.floorOverride = c; // the 2D plan reads it too
       app.plugin('plan')?.isOpen && app.plugin('plan').draw();
     };
-    for (const c of FLOORS) { const name = c === FLOORS[FLOORS.length - 1] ? `${c} (ברירת מחדל)` : c; ff.add({ [name]: () => paint(c) }, name); }
+    // one colour at a time (radio buttons): each row is painted in its own colour
+    const pick = Object.fromEntries(FLOORS.map((c) => [c, c === FLOORS[FLOORS.length - 1]]));
+    const radios = FLOORS.map((c) => {
+      const hex = `⁦${c}⁩`; // keeps the # on the left of the code in the right-to-left panel
+      const ctrl = ff.add(pick, c).name(hex).onChange((v) => {
+        if (!v) { pick[c] = true; ctrl.updateDisplay(); return; } // the selected one stays selected
+        for (const o of radios) if (o !== ctrl) { pick[o.property] = false; o.updateDisplay(); }
+        paint(c);
+      });
+      ctrl.domElement.classList.add('radio');
+      ctrl.domElement.querySelector('.name').style.background = c; // the colour sits behind the label only
+      return ctrl;
+    });
     app.on('loaded', () => paint(FLOORS[FLOORS.length - 1]));
 
     // info box + editable fields of the selected object

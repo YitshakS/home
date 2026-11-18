@@ -98,6 +98,7 @@ export class WalkMode extends Plugin {
     this.heightBox.className = 'walk-height';
     this.heightBox.hidden = true;
     this.heightBox.innerHTML = '<span>גובה עיניים</span><span class="mx">250</span><input type="range" min="0" max="250" step="5" orient="vertical"><span>0</span><b></b>';
+    this.heightBox.firstElementChild.addEventListener('click', () => this.heightBox.classList.toggle('collapsed')); // the title folds the box
     this.heightInput = this.heightBox.querySelector('input');
     this.heightLabel = this.heightBox.querySelector('b');
     this.heightInput.addEventListener('input', () => this.setEye(+this.heightInput.value));
@@ -123,7 +124,7 @@ export class WalkMode extends Plugin {
   setEye(v) {
     this.eye = v;
     this.heightInput.value = v;
-    this.heightLabel.textContent = v + ' ס"מ';
+    this.heightLabel.textContent = Math.round(v) + ' ס"מ'; // dragging gives fractions (60.400000000000006): a long label stretches the box
     if (this.active) this.app.camera.position.y = v;
   }
 
