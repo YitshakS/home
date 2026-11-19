@@ -7017,24 +7017,24 @@
   "type": "person",
   "name": "אדם (בדיקת מרווחים)",
   "model": "models/3006/cool_man.glb",
-  "x": 1825,
-  "y": 772,
+  "x": 1547,
+  "y": 824.5,
   "elevation": 0,
-  "angle": -3.141592653589793,
+  "angle": -4.71238898038469,
   "height": 175,
   "sitLift": -4,
   "stand": {
-   "x": 1780,
-   "y": 595,
-   "angle": 0
+   "x": 1465,
+   "y": 825,
+   "angle": -1.5707963267948966
   },
   "clips": {
    "stand": "Pose",
    "sit": "sit"
   },
   "sitting": false,
-  "group": "שירותי אורחים",
-  "toilet": "98af3f94-c029-4b19-9975-a4c1019f3f97"
+  "group": "שירותים מתחת למדרגות",
+  "toilet": "0a034272-4d73-48e7-9f81-4691e9f5a1de"
  },
  {
   "id": "70d809dc-5e42-478a-aab7-c7e29b9a2bad",
@@ -7384,28 +7384,6 @@
   "group": "חדר שירותים - חלון"
  },
  {
-  "id": "bfa4ba74-cdf8-4e3e-9a8f-9d1374c7c69b",
-  "type": "model",
-  "name": "Door",
-  "model": "models/5/model.obj",
-  "x": 1475,
-  "y": 885,
-  "elevation": 0,
-  "width": 80,
-  "depth": 34,
-  "height": 210,
-  "angle": 0,
-  "opening": {
-   "wallThickness": 0.5882353,
-   "wallDistance": 0.2058824,
-   "bothSides": true
-  },
-  "group": "שירותים מתחת למדרגות - דלת",
-  "hinge": -1,
-  "swing": 1,
-  "planSwing": 60
- },
- {
   "id": "eacd34b3-f8bc-4077-bf20-9745d4ef90f7",
   "type": "model",
   "name": "מקלחון - קיר מערבי",
@@ -7419,5 +7397,97 @@
   "angle": 0,
   "color": "#ece9e2",
   "group": "שירותי אורחים"
+ },
+ {
+  "id": "0a034272-4d73-48e7-9f81-4691e9f5a1de",
+  "type": "model",
+  "name": "אסלה תלויה",
+  "model": "models/3001/sensia-wall-hung-toilet.glb",
+  "x": 1543,
+  "y": 824.5,
+  "elevation": 4,
+  "width": 37,
+  "depth": 56,
+  "height": 40,
+  "angle": -1.5707963267948966,
+  "group": "שירותים מתחת למדרגות",
+  "lid": {
+   "pivot": [
+    0,
+    -3.821,
+    1.96
+   ],
+   "angle": 100
+  }
+ },
+ {
+  "id": "5a82d6db-f6b2-4a80-84c4-b32aa5cabb83",
+  "type": "model",
+  "name": "פח אשפה",
+  "model": "models/3002/trash-can.glb",
+  "x": 1545,
+  "y": 860,
+  "elevation": 0,
+  "width": 21,
+  "depth": 25,
+  "height": 30,
+  "angle": 3.141592653589793,
+  "group": "שירותים מתחת למדרגות"
+ },
+ {
+  "id": "47065704-6046-46d5-86da-5da95289a9fb",
+  "type": "model",
+  "name": "נייר טואלט",
+  "model": "models/3003/toilet-paper-holder.glb",
+  "x": 1525,
+  "y": 777.75,
+  "elevation": 68,
+  "width": 9.5,
+  "depth": 10.7,
+  "height": 12.5,
+  "angle": 1.5707963267948966,
+  "group": "שירותים מתחת למדרגות"
+ },
+ {
+  "id": "1203ece4-f6e0-4065-b09f-9259d8a1e06d",
+  "type": "model",
+  "name": "דלת שירותים",
+  "model": "models/3004/interior-door.glb",
+  "x": 1475,
+  "y": 885,
+  "elevation": 0,
+  "width": 80,
+  "depth": 10,
+  "height": 207,
+  "angle": 3.141592653589793,
+  "group": "שירותים מתחת למדרגות",
+  "lid": {
+   "pivot": [
+    0.4619,
+    0,
+    -1.052
+   ],
+   "angle": -90,
+   "axis": "y"
+  },
+  "mirrored": false,
+  "frame": {
+   "passage": 61,
+   "jambEdge": 0.452
+  },
+  "swingMark": {
+   "hinge": [
+    1444.5,
+    885
+   ],
+   "r": 60,
+   "from": 0,
+   "to": 1.5707963267948966
+  },
+  "opening": {
+   "wallThickness": 1,
+   "wallDistance": 0,
+   "bothSides": true
+  }
  }
 ]

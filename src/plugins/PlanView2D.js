@@ -215,6 +215,7 @@ export class PlanView2D extends Plugin {
         // window or sliding glass: two thin lines along the wall
         for (const v of [-h / 3, h / 3]) { const [a, b] = [p(o.from, v), p(o.to, v)]; ctx.beginPath(); ctx.moveTo(...a); ctx.lineTo(...b); ctx.stroke(); }
       } else {
+        if (o.hasSwingMark) continue;
         if (o.planSwing) {
           // door with its own hinge and swing side (same convention as DoorToggle): hinge = centre + hinge * (leaf / 2) along the door's x axis, the leaf opens towards swing * local +z
           const s = o.planSwing, ex = [Math.cos(s.angle), Math.sin(s.angle)], ez = [-Math.sin(s.angle), Math.cos(s.angle)];

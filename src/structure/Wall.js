@@ -72,6 +72,8 @@ export class Wall extends Item {
       const ow = o.opening.width ?? o.width, oh = o.opening.height ?? o.height, ob = o.opening.bottom ?? (o.elevation || 0);
       out.push({ from: along - ow / 2, to: along + ow / 2, bottom: ob, top: ob + oh, door: /door|דלת/i.test(o.name || ''),
         // data.planSwing: draw the door's real swing (hinge end and side from data.hinge / data.swing) instead of the default quarter arc
+        // an item with its own data.swingMark draws its swing itself (see PlanView2D), so the default quarter arc is skipped
+        hasSwingMark: !!o.swingMark,
         planSwing: o.planSwing ? { x: o.x, y: o.y, angle: o.angle || 0, hinge: o.hinge ?? -1, swing: o.swing ?? 1, leaf: o.planSwing === true ? 60 : o.planSwing } : null });
     }
     return out.sort((a, b) => a.from - b.from);
