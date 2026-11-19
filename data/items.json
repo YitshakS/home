@@ -7297,5 +7297,90 @@
   "angle": 3.141592653589793,
   "gloss": true,
   "group": "רכב"
+ },
+ {
+  "id": "9998ef92-9218-4f48-83fc-96726f1edeea",
+  "type": "model",
+  "name": "Door",
+  "model": "models/5/model.obj",
+  "x": 1752,
+  "y": 1255,
+  "elevation": 0,
+  "width": 80,
+  "depth": 34,
+  "height": 210,
+  "angle": 0,
+  "opening": {
+   "wallThickness": 0.5882353,
+   "wallDistance": 0.2058824,
+   "bothSides": true
+  },
+  "group": "חדר שירותים - דלת",
+  "hinge": 1,
+  "swing": -1,
+  "planSwing": 60
+ },
+ {
+  "id": "a422396d-85e5-437c-a013-b70bb5f8998a",
+  "type": "model",
+  "name": "Door",
+  "model": "models/5/model.obj",
+  "x": 1632,
+  "y": 1365,
+  "elevation": 0,
+  "width": 80,
+  "depth": 34,
+  "height": 210,
+  "angle": 1.5707964,
+  "opening": {
+   "wallThickness": 0.5882353,
+   "wallDistance": 0.2058824,
+   "bothSides": true
+  },
+  "group": "חדר שירותים - דלת",
+  "hinge": 1,
+  "swing": 1,
+  "planSwing": 60
+ },
+ {
+  "id": "781c3929-aa3e-4abf-b1aa-efb63c5e970f",
+  "type": "model",
+  "name": "Door",
+  "model": "models/5/model.obj",
+  "x": 1742,
+  "y": 1462,
+  "elevation": 0,
+  "width": 80,
+  "depth": 34,
+  "height": 210,
+  "angle": 0,
+  "opening": {
+   "wallThickness": 0.5882353,
+   "wallDistance": 0.2058824,
+   "bothSides": true
+  },
+  "group": "חדר שירותים - דלת",
+  "hinge": 1,
+  "swing": 1,
+  "planSwing": 60
+ },
+ {
+  "id": "682cbb38-6f5c-447b-ac47-47e5a2317ca3",
+  "type": "model",
+  "name": "Double window",
+  "model": "models/7/model.obj",
+  "x": 1880,
+  "y": 1313.5,
+  "elevation": 120,
+  "width": 80,
+  "depth": 34.00075,
+  "height": 60,
+  "angle": 1.5707964,
+  "opening": {
+   "wallThickness": 0.5882,
+   "wallDistance": 0.2059,
+   "bothSides": true
+  },
+  "group": "חדר שירותים - חלון"
  }
 ]

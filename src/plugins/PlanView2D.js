@@ -121,7 +121,11 @@ export class PlanView2D extends Plugin {
         if (k.label && k.sub) {
           text(k.label, [(a0 + a1) / 2, (b0 + b1) / 2 - fs * 0.6], fs, '#1d2b36', false);
           text(k.sub, [(a0 + a1) / 2, (b0 + b1) / 2 + fs * 0.6], fs, k.subColor || '#e03131', true, 'ltr');
-        } else if (k.label) text(k.label, [(a0 + a1) / 2, (b0 + b1) / 2], fs, '#1d2b36', false);
+        } else if (k.label) {
+          // a label may hold several lines ("\n"), centred one under the other
+          const ls = String(k.label).split('\n');
+          ls.forEach((t, i) => text(t, [(a0 + a1) / 2, (b0 + b1) / 2 + (i - (ls.length - 1) / 2) * fs * 1.2], fs, '#1d2b36', false));
+        }
       } else if (k.swing) {
         const [hx, hy] = this.toScreen(k.swing.hinge), r = k.swing.r * S;
         ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 1.2; ctx.setLineDash([4, 3]);
@@ -211,6 +215,16 @@ export class PlanView2D extends Plugin {
         // window or sliding glass: two thin lines along the wall
         for (const v of [-h / 3, h / 3]) { const [a, b] = [p(o.from, v), p(o.to, v)]; ctx.beginPath(); ctx.moveTo(...a); ctx.lineTo(...b); ctx.stroke(); }
       } else {
+        if (o.planSwing) {
+          // door with its own hinge and swing side (same convention as DoorToggle): hinge = centre + hinge * (leaf / 2) along the door's x axis, the leaf opens towards swing * local +z
+          const s = o.planSwing, ex = [Math.cos(s.angle), Math.sin(s.angle)], ez = [-Math.sin(s.angle), Math.cos(s.angle)];
+          const hp = this.toScreen([s.x + s.hinge * (s.leaf / 2) * ex[0], s.y + s.hinge * (s.leaf / 2) * ex[1]]), r = s.leaf * this.scale;
+          const a1 = Math.atan2(-s.hinge * ex[1], -s.hinge * ex[0]), a2 = Math.atan2(s.swing * ez[1], s.swing * ez[0]);
+          let diff = a2 - a1; while (diff > Math.PI) diff -= 2 * Math.PI; while (diff <= -Math.PI) diff += 2 * Math.PI;
+          ctx.beginPath(); ctx.moveTo(hp[0], hp[1]); ctx.arc(hp[0], hp[1], r, a1, a2, diff < 0); ctx.closePath();
+          ctx.strokeStyle = '#7d8790'; ctx.stroke();
+          continue;
+        }
         // door: leaf and quarter swing
         const r = (o.to - o.from) * this.scale, [hx, hy] = p(o.from, h), ang = Math.atan2(dy, dx);
         ctx.beginPath(); ctx.moveTo(hx, hy); ctx.arc(hx, hy, r, ang, ang + Math.PI / 2); ctx.closePath();

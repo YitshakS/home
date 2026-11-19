@@ -70,7 +70,9 @@ export class Wall extends Item {
       if (!parallel || across > t / 2 + 6 || along < -1 || along > L + 1) continue;
       // data.opening may name the hole itself ({width, height, bottom}) when the model is larger than the window (curtains, rod)
       const ow = o.opening.width ?? o.width, oh = o.opening.height ?? o.height, ob = o.opening.bottom ?? (o.elevation || 0);
-      out.push({ from: along - ow / 2, to: along + ow / 2, bottom: ob, top: ob + oh, door: /door|דלת/i.test(o.name || '') });
+      out.push({ from: along - ow / 2, to: along + ow / 2, bottom: ob, top: ob + oh, door: /door|דלת/i.test(o.name || ''),
+        // data.planSwing: draw the door's real swing (hinge end and side from data.hinge / data.swing) instead of the default quarter arc
+        planSwing: o.planSwing ? { x: o.x, y: o.y, angle: o.angle || 0, hinge: o.hinge ?? -1, swing: o.swing ?? 1, leaf: o.planSwing === true ? 60 : o.planSwing } : null });
     }
     return out.sort((a, b) => a.from - b.from);
   }
