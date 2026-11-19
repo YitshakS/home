@@ -118,7 +118,10 @@ export class PlanView2D extends Plugin {
         const [a0, b0] = this.toScreen([k.rect[0], k.rect[1]]), [a1, b1] = this.toScreen([k.rect[2], k.rect[3]]);
         ctx.save(); ctx.globalAlpha = 0.55; ctx.fillStyle = col; ctx.fillRect(a0, b0, a1 - a0, b1 - b0); ctx.globalAlpha = 1;
         ctx.strokeStyle = '#4b5560'; ctx.lineWidth = 1; ctx.strokeRect(a0, b0, a1 - a0, b1 - b0); ctx.restore();
-        if (k.label) text(k.label, [(a0 + a1) / 2, (b0 + b1) / 2], fs, '#1d2b36', false);
+        if (k.label && k.sub) {
+          text(k.label, [(a0 + a1) / 2, (b0 + b1) / 2 - fs * 0.6], fs, '#1d2b36', false);
+          text(k.sub, [(a0 + a1) / 2, (b0 + b1) / 2 + fs * 0.6], fs, k.subColor || '#e03131', true, 'ltr');
+        } else if (k.label) text(k.label, [(a0 + a1) / 2, (b0 + b1) / 2], fs, '#1d2b36', false);
       } else if (k.swing) {
         const [hx, hy] = this.toScreen(k.swing.hinge), r = k.swing.r * S;
         ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 1.2; ctx.setLineDash([4, 3]);
