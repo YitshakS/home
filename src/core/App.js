@@ -163,7 +163,8 @@ export class App extends EventTarget {
     sun.castShadow = true;
     sun.shadow.mapSize.set(4096, 4096);
     const sc = sun.shadow.camera;
-    sc.left = -1400; sc.right = 1400; sc.top = 1400; sc.bottom = -1400; sc.near = 100; sc.far = 5000;
+    const half = this.houseHalfSpan();
+    sc.left = -half; sc.right = half; sc.top = half; sc.bottom = -half; sc.near = 100; sc.far = 5000;
     sun.shadow.bias = -0.0004;
     sun.shadow.normalBias = 0.6;
     this.scene.add(sun, sun.target);
@@ -187,11 +188,25 @@ export class App extends EventTarget {
     this.ground = ground;
 
     // lot boundary as a thin line on the grass
-    const pts = this.house.lot.points.map(([x, y]) => new THREE.Vector3(x, 0.3, y));
-    const line = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0xffffff }));
+    const line = new THREE.Group();
+    for (const lot of this.lots) {
+      const pts = lot.points.map(([x, y]) => new THREE.Vector3(x, 0.3, y));
+      line.add(new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0xffffff })));
+    }
     line.name = 'lot-boundary';
     this.scene.add(line);
     this.lotLine = line;
+  }
+
+  // the main lot and any further lots (house.extraLots: [{name, points}])
+  get lots() { return [this.house.lot, ...(this.house.extraLots || [])]; }
+
+  // half the span of the walls (cm) plus a margin: how far from the centre the sun's shadows must reach
+  houseHalfSpan() {
+    if (!this.house) return 1400;
+    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+    for (const w of this.house.walls) for (const [x, y] of [w.start, w.end]) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+    return Math.max(1400, Math.max(x1 - x0, y1 - y0) / 2 + 300);
   }
 
   houseCenter() {

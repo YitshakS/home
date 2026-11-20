@@ -59,7 +59,7 @@ export class PlanView2D extends Plugin {
 
   // ---------- view transform ----------
   fit() {
-    const pts = this.app.house.lot.points;
+    const pts = this.app.lots.flatMap((l) => l.points);
     const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
     const w = this.canvas.clientWidth || innerWidth, h = this.canvas.clientHeight || innerHeight - 44;
     const bw = Math.max(...xs) - Math.min(...xs), bh = Math.max(...ys) - Math.min(...ys);
@@ -94,7 +94,7 @@ export class PlanView2D extends Plugin {
       ctx.fillText(s, x, y);
     };
 
-    poly(app.house.lot.points, '#eef6e8', '#5c8f45', 1.5);
+    for (const lot of app.lots) poly(lot.points, '#eef6e8', '#5c8f45', 1.5);
     for (const r of app.rooms) {
       poly(r.data.points, app.floorOverride || r.data.floorColor, null);
       if (!r.data.name) continue;
@@ -356,7 +356,7 @@ export class PlanView2D extends Plugin {
     const keep = [this.scale, this.ox, this.oy], sel = this.app.selected;
     const W = 3508, H = 2480; // A4 landscape at 300 dpi
     const c = document.createElement('canvas'); c.width = W; c.height = H;
-    const pts = this.app.house.lot.points, xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
+    const pts = this.app.lots.flatMap((l) => l.points), xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
     this.scale = Math.min(W / (Math.max(...xs) - Math.min(...xs) + 300), H / (Math.max(...ys) - Math.min(...ys) + 300));
     this.ox = W / 2 - ((Math.min(...xs) + Math.max(...xs)) / 2) * this.scale;
     this.oy = H / 2 - ((Math.min(...ys) + Math.max(...ys)) / 2) * this.scale;

@@ -122,12 +122,12 @@ export class OrbitView extends Plugin {
 
   // viewpoints relative to the middle of the house (cm)
   views() {
-    const c = this.app.houseCenter();
+    const c = this.app.houseCenter(), k = this.app.houseHalfSpan() / 1400; // the whole-house views back off when there is more than one lot
     return {
-      overview: { label: 'מבט כללי', pos: [c.x + 900, 1300, c.z + 1500], target: [c.x, 0, c.z] },
+      overview: { label: 'מבט כללי', pos: [c.x + 900 * k, 1300 * k, c.z + 1500 * k], target: [c.x, 0, c.z] },
       wc: { label: 'שירותי אורחים', pos: [1775, 160, 341], target: [1760, 120, 534], walk: { x: 1775, z: 341, yaw: Math.PI } },
       sofas: { label: 'השוואת ספות', pos: [1175, 650, -650], target: [1175, 0, -100] },
-      top: { label: 'מלמעלה', pos: [c.x, 2600, c.z + 1], target: [c.x, 0, c.z] },
+      top: { label: 'מלמעלה', pos: [c.x, 2600 * k, c.z + 1], target: [c.x, 0, c.z] },
       kitchen: { label: 'מטבח', pos: [1000, 180, 450], target: [995, 120, 875] },
       living: { label: 'סלון ופינת אוכל', pos: [1450, 150, 310], target: [1810, 105, 490] },
       toilets: { label: 'השוואת אסלות', pos: [1790, 230, -520], target: [1790, 25, -100] },
